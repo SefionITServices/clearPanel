@@ -5,9 +5,15 @@ server {
     # Redirect HTTP to HTTPS (uncomment after setting up SSL)
     # return 301 https://$server_name$request_uri;
 
-    # Or use HTTP (not recommended for production)
-    location / {
-        proxy_pass http://localhost:3000;
+    root /opt/hpanel/backend/public;
+    index index.html;
+
+    # File upload size limit
+    client_max_body_size 100M;
+
+    # API routes - proxy to NestJS backend
+    location /api {
+        proxy_pass http://localhost:3334;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -24,8 +30,21 @@ server {
         send_timeout 600;
     }
 
-    # File upload size limit
-    client_max_body_size 100M;
+    # Static files - served by nginx
+    location / {
+        try_files $uri $uri/ /index.html;
+        
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
 }
 
 # HTTPS configuration (after SSL setup with certbot)
@@ -37,9 +56,16 @@ server {
 #     ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
 #     ssl_protocols TLSv1.2 TLSv1.3;
 #     ssl_ciphers HIGH:!aNULL:!MD5;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
 #
-#     location / {
-#         proxy_pass http://localhost:3000;
+#     root /opt/hpanel/backend/public;
+#     index index.html;
+#     client_max_body_size 100M;
+#
+#     # API routes
+#     location /api {
+#         proxy_pass http://localhost:3334;
 #         proxy_http_version 1.1;
 #         proxy_set_header Upgrade $http_upgrade;
 #         proxy_set_header Connection 'upgrade';
@@ -55,5 +81,19 @@ server {
 #         send_timeout 600;
 #     }
 #
-#     client_max_body_size 100M;
+#     # Static files
+#     location / {
+#         try_files $uri $uri/ /index.html;
+#         
+#         location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+#             expires 1y;
+#             add_header Cache-Control "public, immutable";
+#         }
+#     }
+#
+#     # Security headers
+#     add_header X-Frame-Options "SAMEORIGIN" always;
+#     add_header X-Content-Type-Options "nosniff" always;
+#     add_header X-XSS-Protection "1; mode=block" always;
+#     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 # }
