@@ -1,6 +1,6 @@
-# VPS Deployment Guide - Step by Step
+﻿# VPS Deployment Guide - Step by Step
 
-Complete guide to deploy hPanel on your VPS from scratch.
+Complete guide to deploy clearPanel on your VPS from scratch.
 
 ## Prerequisites
 
@@ -32,24 +32,24 @@ sudo apt-get upgrade -y
 sudo dnf update -y
 ```
 
-## Step 3: Install Node.js 18.x
+## Step 3: Install Node.js 20.x
 
 **Ubuntu/Debian:**
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
 **CentOS/AlmaLinux:**
 ```bash
-curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
 sudo dnf install -y nodejs
 ```
 
 **Verify installation:**
 ```bash
-node --version  # Should show v18.x.x
-npm --version   # Should show 9.x.x or higher
+node --version  # Should show v20.x.x
+npm --version   # Should show 10.x.x or higher
 ```
 
 ## Step 4: Install Git
@@ -64,12 +64,12 @@ sudo apt-get install -y git
 sudo dnf install -y git
 ```
 
-## Step 5: Clone hPanel Repository
+## Step 5: Clone clearPanel Repository
 
 ```bash
 cd /opt
-sudo git clone https://github.com/SefionITServices/clearPanel.git hpanel
-cd hpanel
+sudo git clone https://github.com/SefionITServices/clearPanel.git clearpanel
+cd clearpanel
 ```
 
 ## Step 6: Install Dependencies
@@ -127,7 +127,7 @@ openssl rand -hex 32
 ## Step 8: Create System User
 
 ```bash
-# Create user for running hPanel
+# Create user for running clearPanel
 sudo useradd -r -s /bin/bash -d /home/sefion sefion
 
 # Create home directory
@@ -142,7 +142,7 @@ sudo chown -R sefion:sefion /home/sefion
 ## Step 9: Build Backend
 
 ```bash
-cd /opt/hpanel/backend
+cd /opt/clearpanel/backend
 sudo npm run build
 ```
 
@@ -152,19 +152,19 @@ sudo npm run build
 
 ```bash
 # Copy service file
-sudo cp /opt/hpanel/hpanel.service /etc/systemd/system/
+sudo cp /opt/clearpanel/clearpanel.service /etc/systemd/system/
 
 # Reload systemd
 sudo systemctl daemon-reload
 
 # Enable service to start on boot
-sudo systemctl enable hpanel
+sudo systemctl enable clearpanel
 
 # Start the service
-sudo systemctl start hpanel
+sudo systemctl start clearpanel
 
 # Check status
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 ```
 
 **Expected output:** Should show "active (running)" in green
@@ -237,7 +237,7 @@ sudo systemctl start nginx
 
 **Create nginx configuration:**
 ```bash
-sudo nano /etc/nginx/sites-available/hpanel
+sudo nano /etc/nginx/sites-available/clearpanel
 ```
 
 **Paste this configuration:**
@@ -246,7 +246,6 @@ server {
     listen 80;
     server_name 204.83.99.245;  # Your VPS IP or domain
 
-    location / {
         proxy_pass http://localhost:3334;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -260,7 +259,7 @@ server {
         # Increase timeout for large file uploads
         proxy_read_timeout 300;
         proxy_connect_timeout 300;
-        proxy_send_timeout 300;
+     cp /opt/clearpanel/backend/.env $BACKUP_DIR/env_$DATE.bak
     }
 }
 ```
@@ -268,11 +267,11 @@ server {
 **For Ubuntu/Debian (using sites-enabled):**
 ```bash
 # Enable the site
-sudo ln -s /etc/nginx/sites-available/hpanel /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/clearpanel /etc/nginx/sites-enabled/
 
 # Remove default site
 sudo rm /etc/nginx/sites-enabled/default
-
+     sudo chmod +x /opt/clearpanel/backup.sh
 # Test configuration
 sudo nginx -t
 
@@ -283,7 +282,7 @@ sudo systemctl reload nginx
 **For CentOS/AlmaLinux:**
 ```bash
 # Copy to conf.d
-sudo cp /etc/nginx/sites-available/hpanel /etc/nginx/conf.d/hpanel.conf
+sudo cp /etc/nginx/sites-available/clearpanel /etc/nginx/conf.d/clearpanel.conf
 
 # Test configuration
 sudo nginx -t
@@ -317,7 +316,7 @@ sudo systemctl status bind9  # or 'named' on CentOS
 dig @localhost google.com
 ```
 
-## Step 15: Access hPanel
+## Step 15: Access clearPanel
 
 **Open your browser and navigate to:**
 ```
@@ -332,8 +331,8 @@ http://204.83.99.245
 
 **Check all services are running:**
 ```bash
-# hPanel backend
-sudo systemctl status hpanel
+# clearPanel backend
+sudo systemctl status clearpanel
 
 # Nginx web server
 sudo systemctl status nginx
@@ -344,8 +343,8 @@ sudo systemctl status bind9  # or 'named'
 
 **Check logs if needed:**
 ```bash
-# hPanel logs
-sudo journalctl -u hpanel -n 50
+# clearPanel logs
+sudo journalctl -u clearpanel -n 50
 
 # Nginx logs
 sudo tail -f /var/log/nginx/error.log
@@ -373,7 +372,7 @@ curl http://localhost:3334/api/dns-server/status
 ## Step 17: Create Your First Domain
 
 **Via Web Interface:**
-1. Login to hPanel
+1. Login to clearPanel
 2. Click "Domains" in sidebar
 3. Click "Add Domain" button
 4. Enter your domain name (e.g., `mywebsite.com`)
@@ -489,7 +488,7 @@ sudo dnf install -y certbot python3-certbot-nginx
 
 **Get SSL certificate:**
 ```bash
-# For hPanel access
+# For clearPanel access
 sudo certbot --nginx -d panel.yourdomain.com
 
 # For hosted websites
@@ -507,13 +506,13 @@ sudo certbot renew --dry-run
 
 **Create backup script:**
 ```bash
-sudo nano /opt/hpanel/backup.sh
+sudo nano /opt/clearpanel/backup.sh
 ```
 
 **Add this script:**
 ```bash
 #!/bin/bash
-BACKUP_DIR="/backup/hpanel"
+BACKUP_DIR="/backup/clearpanel"
 DATE=$(date +%Y%m%d_%H%M%S)
 
 # Create backup directory
@@ -526,7 +525,7 @@ tar -czf $BACKUP_DIR/domains_$DATE.tar.gz /home/sefion/Domains/
 tar -czf $BACKUP_DIR/dns_zones_$DATE.tar.gz /etc/bind/zones/
 
 # Backup configuration
-cp /opt/hpanel/backend/.env $BACKUP_DIR/env_$DATE.bak
+cp /opt/clearpanel/backend/.env $BACKUP_DIR/env_$DATE.bak
 cp /etc/bind/named.conf.local $BACKUP_DIR/named.conf_$DATE.bak
 
 # Keep only last 7 days
@@ -538,7 +537,7 @@ echo "Backup completed: $DATE"
 
 **Make executable:**
 ```bash
-sudo chmod +x /opt/hpanel/backup.sh
+sudo chmod +x /opt/clearpanel/backup.sh
 ```
 
 **Add to cron (daily at 2 AM):**
@@ -548,16 +547,16 @@ sudo crontab -e
 
 **Add this line:**
 ```
-0 2 * * * /opt/hpanel/backup.sh >> /var/log/hpanel-backup.log 2>&1
+0 2 * * * /opt/clearpanel/backup.sh >> /var/log/clearpanel-backup.log 2>&1
 ```
 
 ## Troubleshooting
 
-### Can't access hPanel via browser
+### Can't access clearPanel via browser
 
 ```bash
 # Check if service is running
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 
 # Check if port is listening
 sudo netstat -tulpn | grep 3334
@@ -567,7 +566,7 @@ sudo systemctl status nginx
 sudo nginx -t
 
 # Check logs
-sudo journalctl -u hpanel -n 50
+sudo journalctl -u clearpanel -n 50
 sudo tail -f /var/log/nginx/error.log
 ```
 
@@ -596,8 +595,8 @@ sudo journalctl -u bind9 -n 50  # or 'named'
 # Fix domain folder permissions
 sudo chown -R sefion:sefion /home/sefion/Domains/
 
-# Fix hPanel permissions
-sudo chown -R sefion:sefion /opt/hpanel/
+# Fix clearPanel permissions
+sudo chown -R sefion:sefion /opt/clearpanel/
 
 # Fix BIND permissions
 sudo chown -R bind:bind /etc/bind/zones/  # Ubuntu
@@ -608,19 +607,19 @@ sudo chown -R named:named /etc/bind/zones/  # CentOS
 
 ```bash
 # Check detailed logs
-sudo journalctl -u hpanel -xe
+sudo journalctl -u clearpanel -xe
 
 # Try running manually to see errors
-cd /opt/hpanel/backend
+cd /opt/clearpanel/backend
 sudo -u sefion node dist/main.js
 
 # Check environment file
-cat /opt/hpanel/backend/.env
+cat /opt/clearpanel/backend/.env
 ```
 
 ## Post-Deployment Checklist
 
-- [ ] hPanel accessible via browser
+- [ ] clearPanel accessible via browser
 - [ ] Can login with admin credentials
 - [ ] Created test domain successfully
 - [ ] DNS server status shows "installed: true, running: true"
@@ -681,44 +680,45 @@ sudo tail -f /var/log/secure     # CentOS
 
 **Restart all services:**
 ```bash
-sudo systemctl restart hpanel
+sudo systemctl restart clearpanel
 sudo systemctl restart nginx
 sudo systemctl restart bind9  # or 'named'
 ```
 
-**Update hPanel:**
+**Update clearPanel:**
 ```bash
-cd /opt/hpanel
+cd /opt/clearpanel
 sudo git pull origin main
 cd backend
 sudo npm install
 sudo npm run build
-sudo systemctl restart hpanel
+sudo systemctl restart clearpanel
 ```
 
 **View all logs:**
 ```bash
 # Real-time monitoring
-sudo journalctl -u hpanel -f
+sudo journalctl -u clearpanel -f
 sudo tail -f /var/log/nginx/access.log
 sudo tail -f /var/log/nginx/error.log
 ```
 
 ## Next Steps
 
-1. ✅ Add more domains
-2. ✅ Set up email server (future feature)
-3. ✅ Configure additional DNS records (MX, TXT, etc.)
-4. ✅ Set up monitoring and alerting
-5. ✅ Configure automated backups
-6. ✅ Install additional security tools
+1. âœ… Add more domains
+2. âœ… Set up email server (future feature)
+3. âœ… Configure additional DNS records (MX, TXT, etc.)
+4. âœ… Set up monitoring and alerting
+5. âœ… Configure automated backups
+6. âœ… Install additional security tools
 
 ## Support
 
-- **Documentation:** `/opt/hpanel/docs/`
-- **Logs:** `sudo journalctl -u hpanel -f`
+- **Documentation:** `/opt/clearpanel/docs/`
+- **Logs:** `sudo journalctl -u clearpanel -f`
 - **GitHub:** https://github.com/SefionITServices/clearPanel
 
 ---
 
-**Congratulations!** 🎉 Your hPanel hosting control panel is now live and ready to manage domains!
+**Congratulations!** ðŸŽ‰ Your clearPanel hosting control panel is now live and ready to manage domains!
+

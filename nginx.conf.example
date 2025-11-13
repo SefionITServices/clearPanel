@@ -5,7 +5,7 @@ server {
     # Redirect HTTP to HTTPS (uncomment after setting up SSL)
     # return 301 https://$server_name$request_uri;
 
-    root /opt/hpanel/backend/public;
+    root /opt/clearpanel/backend/public;
     index index.html;
 
     # File upload size limit
@@ -13,7 +13,7 @@ server {
 
     # API routes - proxy to NestJS backend
     location /api {
-    proxy_pass http://localhost:3334;
+        proxy_pass http://localhost:3334;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -59,7 +59,7 @@ server {
 #     ssl_prefer_server_ciphers on;
 #     ssl_session_cache shared:SSL:10m;
 #
-#     root /opt/hpanel/backend/public;
+#     root /opt/clearpanel/backend/public;
 #     index index.html;
 #     client_max_body_size 100M;
 #
@@ -97,3 +97,4 @@ server {
 #     add_header X-XSS-Protection "1; mode=block" always;
 #     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 # }
+

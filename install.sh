@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Installing hPanel on VPS..."
+echo "🚀 Installing clearPanel on VPS..."
 
 # Colors
 GREEN='\033[0;32m'
@@ -10,9 +10,9 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Configuration
-INSTALL_DIR="/opt/hpanel"
-SERVICE_USER="hpanel"
-SERVICE_FILE="hpanel.service"
+INSTALL_DIR="/opt/clearpanel"
+SERVICE_USER="clearpanel"
+SERVICE_FILE="clearpanel.service"
 NGINX_CONF="nginx.conf.example"
 
 # Check if running as root
@@ -48,15 +48,15 @@ fi
     echo ""
     read -p "Press Enter to edit .env now, or Ctrl+C to skip..."
 
-# Install Node.js 18+ if not present
+# Install Node.js 20+ if not present
 NODE_VERSION=$(node -v 2>/dev/null | cut -d'v' -f2 | cut -d'.' -f1 || echo "0")
-if [ "$NODE_VERSION" -lt 18 ]; then
-    echo -e "${YELLOW}📦 Installing Node.js 18 LTS...${NC}"
+if [ "$NODE_VERSION" -lt 20 ]; then
+    echo -e "${YELLOW}📦 Installing Node.js 20 LTS...${NC}"
     if [ "$PKG_MANAGER" = "apt-get" ]; then
-        curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
         apt-get install -y nodejs
     else
-        curl -fsSL https://rpm.nodesource.com/setup_18.x | bash -
+        curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
         dnf install -y nodejs
     fi
 fi
@@ -77,7 +77,7 @@ if [ "$PWD" != "$INSTALL_DIR" ]; then
     echo -e "${YELLOW}📋 Copying application files...${NC}"
     cp -r backend "$INSTALL_DIR/" 2>/dev/null || true
     cp -r frontend "$INSTALL_DIR/" 2>/dev/null || true
-    cp hpanel.service "$INSTALL_DIR/" 2>/dev/null || true
+    cp clearpanel.service "$INSTALL_DIR/" 2>/dev/null || true
     cp nginx.conf.example "$INSTALL_DIR/" 2>/dev/null || true
 fi
 
@@ -114,7 +114,7 @@ ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin123
 
 # File Manager Settings
-ROOT_PATH=/opt/hpanel/data
+ROOT_PATH=/opt/clearpanel/data
 ALLOWED_EXTENSIONS=*
 MAX_FILE_SIZE=104857600
 EOF
@@ -124,49 +124,49 @@ chmod 600 "$INSTALL_DIR/backend/.env"
 
 # Setup systemd service
 echo -e "${YELLOW}⚙️  Setting up systemd service...${NC}"
-cp "$INSTALL_DIR/hpanel.service" "/etc/systemd/system/hpanel.service"
+cp "$INSTALL_DIR/clearpanel.service" "/etc/systemd/system/clearpanel.service"
 systemctl daemon-reload
-systemctl enable hpanel
+systemctl enable clearpanel
 
 # Configure nginx
 echo -e "${YELLOW}🌐 Configuring nginx...${NC}"
-cp "$INSTALL_DIR/nginx.conf.example" "/etc/nginx/sites-available/hpanel" 2>/dev/null || \
-    cp "$INSTALL_DIR/nginx.conf.example" "/etc/nginx/conf.d/hpanel.conf"
+cp "$INSTALL_DIR/nginx.conf.example" "/etc/nginx/sites-available/clearpanel" 2>/dev/null || \
+    cp "$INSTALL_DIR/nginx.conf.example" "/etc/nginx/conf.d/clearpanel.conf"
 
 if [ -d "/etc/nginx/sites-enabled" ]; then
-    ln -sf "/etc/nginx/sites-available/hpanel" "/etc/nginx/sites-enabled/hpanel"
+    ln -sf "/etc/nginx/sites-available/clearpanel" "/etc/nginx/sites-enabled/clearpanel"
     rm -f /etc/nginx/sites-enabled/default
 fi
 
 # Test and reload nginx
 nginx -t && systemctl enable nginx && systemctl restart nginx
 
-# Start hPanel service
-echo -e "${YELLOW}🚀 Starting hPanel service...${NC}"
-systemctl start hpanel
+# Start clearPanel service
+echo -e "${YELLOW}🚀 Starting clearPanel service...${NC}"
+systemctl start clearpanel
 
 sleep 2
 
 # Check status
-if systemctl is-active --quiet hpanel; then
+if systemctl is-active --quiet clearpanel; then
     echo ""
     echo -e "${GREEN}✅ Installation successful!${NC}"
     echo ""
-    echo -e "${GREEN}hPanel is now running${NC}"
+    echo -e "${GREEN}clearPanel is now running${NC}"
     echo ""
     echo -e "${YELLOW}⚠️  IMPORTANT NEXT STEPS:${NC}"
-    echo "1. Edit /opt/hpanel/backend/.env and change:"
+    echo "1. Edit /opt/clearpanel/backend/.env and change:"
     echo "   - ADMIN_USERNAME"
     echo "   - ADMIN_PASSWORD"
     echo "   - SESSION_SECRET (already generated)"
     echo ""
     echo "2. Edit nginx config:"
-    echo "   /etc/nginx/sites-available/hpanel (Debian/Ubuntu)"
-    echo "   /etc/nginx/conf.d/hpanel.conf (CentOS/RHEL)"
+    echo "   /etc/nginx/sites-available/clearpanel (Debian/Ubuntu)"
+    echo "   /etc/nginx/conf.d/clearpanel.conf (CentOS/RHEL)"
     echo "   Replace 'your-domain.com' with your actual domain"
     echo ""
     echo "3. Restart services:"
-    echo "   sudo systemctl restart hpanel"
+    echo "   sudo systemctl restart clearpanel"
     echo "   sudo systemctl restart nginx"
     echo ""
     echo "4. (Optional) Setup SSL with Let's Encrypt:"
@@ -175,12 +175,12 @@ if systemctl is-active --quiet hpanel; then
     echo -e "${GREEN}Access your panel at: http://your-server-ip${NC}"
     echo ""
     echo "Useful commands:"
-    echo "  View logs: sudo journalctl -u hpanel -f"
-    echo "  Restart: sudo systemctl restart hpanel"
-    echo "  Stop: sudo systemctl stop hpanel"
+    echo "  View logs: sudo journalctl -u clearpanel -f"
+    echo "  Restart: sudo systemctl restart clearpanel"
+    echo "  Stop: sudo systemctl stop clearpanel"
     echo ""
 else
     echo -e "${RED}❌ Installation failed - service is not running${NC}"
-    journalctl -u hpanel -n 50 --no-pager
+    journalctl -u clearpanel -n 50 --no-pager
     exit 1
 fi

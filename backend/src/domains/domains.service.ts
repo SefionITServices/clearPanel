@@ -9,7 +9,7 @@ import { randomUUID } from 'crypto';
 import * as os from 'os';
 
 const DOMAINS_FILE = path.join(process.cwd(), 'domains.json');
-const DOMAINS_ROOT = process.env.DOMAINS_ROOT || path.join(os.homedir(), 'hpanel-domains');
+const DOMAINS_ROOT = process.env.DOMAINS_ROOT || path.join(os.homedir(), 'clearpanel-domains');
 
 @Injectable()
 export class DomainsService {

@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const fs = require('fs').promises;
@@ -51,6 +51,7 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`hPanel running on http://localhost:${PORT}`);
+    console.log(`clearPanel running on http://localhost:${PORT}`);
     console.log(`Default credentials - Username: ${process.env.ADMIN_USERNAME}, Password: ${process.env.ADMIN_PASSWORD}`);
 });
+

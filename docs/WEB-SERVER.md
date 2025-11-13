@@ -1,13 +1,13 @@
-# Web Server Setup on AlmaLinux (Nginx vs Apache)
+﻿# Web Server Setup on AlmaLinux (Nginx vs Apache)
 
-This guide helps you choose and set up a web server on AlmaLinux for hPanel. It includes complete commands, configs, SSL, PHP-FPM, and reverse proxy to the hPanel backend (port 3334).
+This guide helps you choose and set up a web server on AlmaLinux for clearPanel. It includes complete commands, configs, SSL, PHP-FPM, and reverse proxy to the clearPanel backend (port 3334).
 
 ## Recommendation in short
-- Use Nginx as the default. It’s fast, memory‑efficient, and pairs well with Node/Nest (hPanel backend).
+- Use Nginx as the default. Itâ€™s fast, memoryâ€‘efficient, and pairs well with Node/Nest (clearPanel backend).
 - Use Apache only if you need heavy .htaccess usage or per-directory overrides for many legacy PHP apps.
-- Hybrid is possible: Nginx in front, Apache behind (for .htaccess) – advanced setup.
+- Hybrid is possible: Nginx in front, Apache behind (for .htaccess) â€“ advanced setup.
 
-hPanel currently automates Nginx vhosts. Apache works, but automation is manual unless extended.
+clearPanel currently automates Nginx vhosts. Apache works, but automation is manual unless extended.
 
 ---
 
@@ -28,10 +28,10 @@ sudo firewall-cmd --add-service=https --permanent
 sudo firewall-cmd --reload
 ```
 
-### 3) Reverse proxy to hPanel (port 3334)
+### 3) Reverse proxy to clearPanel (port 3334)
 Create a site config:
 ```bash
-sudo tee /etc/nginx/conf.d/hpanel.conf > /dev/null <<'NGINX'
+sudo tee /etc/nginx/conf.d/clearPanel.conf > /dev/null <<'NGINX'
 server {
     listen 80;
     server_name panel.yourdomain.com;  # or your server IP temporarily
@@ -63,7 +63,7 @@ sudo systemctl reload nginx
 
 Note: You also have `nginx.conf.example` in the repo you can reference for broader templates.
 
-### 4) Host a PHP site with PHP‑FPM (optional)
+### 4) Host a PHP site with PHPâ€‘FPM (optional)
 Install PHP and PHP-FPM:
 ```bash
 sudo dnf module reset php -y
@@ -101,7 +101,7 @@ NGINX
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-### 5) SSL (Let’s Encrypt)
+### 5) SSL (Letâ€™s Encrypt)
 Install Certbot for AlmaLinux (via EPEL):
 ```bash
 sudo dnf install -y epel-release
@@ -113,7 +113,7 @@ sudo certbot --nginx -d panel.yourdomain.com
 # For websites
 sudo certbot --nginx -d mywebsite.com -d www.mywebsite.com
 ```
-Auto‑renewal is created by Certbot. Test:
+Autoâ€‘renewal is created by Certbot. Test:
 ```bash
 sudo certbot renew --dry-run
 ```
@@ -151,7 +151,7 @@ sudo firewall-cmd --add-service=https --permanent
 sudo firewall-cmd --reload
 ```
 
-### 3) Reverse proxy to hPanel (port 3334)
+### 3) Reverse proxy to clearPanel (port 3334)
 Install proxy modules:
 ```bash
 sudo dnf install -y mod_ssl
@@ -161,7 +161,7 @@ sudo dnf install -y mod_ssl
 
 Create vhost:
 ```bash
-sudo tee /etc/httpd/conf.d/hpanel.conf > /dev/null <<'APACHE'
+sudo tee /etc/httpd/conf.d/clearPanel.conf > /dev/null <<'APACHE'
 <VirtualHost *:80>
     ServerName panel.yourdomain.com
 
@@ -177,8 +177,8 @@ sudo tee /etc/httpd/conf.d/hpanel.conf > /dev/null <<'APACHE'
     RewriteCond %{HTTP:Upgrade} !=websocket [NC]
     RewriteRule /(.*)           http://127.0.0.1:3334/$1 [P,L]
 
-    ErrorLog  "/var/log/httpd/hpanel_error.log"
-    CustomLog "/var/log/httpd/hpanel_access.log" combined
+    ErrorLog  "/var/log/httpd/clearPanel_error.log"
+    CustomLog "/var/log/httpd/clearPanel_access.log" combined
 </VirtualHost>
 APACHE
 sudo apachectl configtest
@@ -188,7 +188,7 @@ sudo systemctl reload httpd
 If Rewrite/WebSocket proxying errors occur, ensure these modules are loaded:
 - proxy, proxy_http, proxy_wstunnel, rewrite
 
-### 4) PHP with Apache via PHP‑FPM (recommended)
+### 4) PHP with Apache via PHPâ€‘FPM (recommended)
 Install PHP + FPM:
 ```bash
 sudo dnf module reset php -y
@@ -198,7 +198,7 @@ sudo systemctl enable php-fpm
 sudo systemctl start php-fpm
 ```
 
-VHost for a domain using PHP‑FPM (no mod_php):
+VHost for a domain using PHPâ€‘FPM (no mod_php):
 ```bash
 sudo tee /etc/httpd/conf.d/mywebsite.conf > /dev/null <<'APACHE'
 <VirtualHost *:80>
@@ -224,7 +224,7 @@ sudo apachectl configtest
 sudo systemctl reload httpd
 ```
 
-### 5) SSL (Let’s Encrypt)
+### 5) SSL (Letâ€™s Encrypt)
 ```bash
 sudo dnf install -y epel-release
 sudo dnf install -y certbot python3-certbot-apache
@@ -257,15 +257,15 @@ sudo tail -f /var/log/httpd/error_log
 - Performance: Nginx generally faster for static + proxy; Apache flexible with .htaccess
 - Memory: Nginx uses less under high concurrency (event model)
 - Config model: Apache supports per-directory .htaccess; Nginx central configs only
-- PHP: Prefer PHP‑FPM with both; avoid mod_php on modern setups
-- hPanel integration: Nginx automation exists; Apache would require manual or added automation
+- PHP: Prefer PHPâ€‘FPM with both; avoid mod_php on modern setups
+- clearPanel integration: Nginx automation exists; Apache would require manual or added automation
 
 ## Security hardening tips
-- Always enable HTTPS (Certbot) and redirect HTTP → HTTPS
+- Always enable HTTPS (Certbot) and redirect HTTP â†’ HTTPS
 - Keep packages updated: `sudo dnf update -y`
 - Limit server tokens: hide versions in headers (Nginx: `server_tokens off;`, Apache: `ServerTokens Prod` and `ServerSignature Off`)
 - Use strong ciphers and TLS 1.2/1.3 only
-- For PHP‑FPM, run as a dedicated user per site if multi-tenant
+- For PHPâ€‘FPM, run as a dedicated user per site if multi-tenant
 - File permissions: owned by site user, readable by web server
 
 ## Troubleshooting
@@ -288,4 +288,4 @@ sudo chcon -R -t httpd_sys_rw_content_t /home/sefion/Domains/mywebsite.com/uploa
 
 ---
 
-Need equivalent Apache automation in hPanel? I can add an Apache WebServerService that mirrors our Nginx vhost creation/deletion. Let me know and I’ll wire it up.
+Need equivalent Apache automation in clearPanel? I can add an Apache WebServerService that mirrors our Nginx vhost creation/deletion. Let me know and Iâ€™ll wire it up.

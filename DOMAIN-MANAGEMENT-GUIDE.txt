@@ -1,7 +1,7 @@
-═══════════════════════════════════════════════════════════════════════════════
+﻿â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                         DOMAIN MANAGEMENT GUIDE
-                              hPanel v2.0
-═══════════════════════════════════════════════════════════════════════════════
+                              clearPanel v2.0
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 OVERVIEW
 --------
@@ -10,22 +10,22 @@ with automatic DNS zone creation and directory setup.
 
 FEATURES IMPLEMENTED
 --------------------
-✅ Create domains with automatic folder creation
-✅ Auto-create DNS zones with default A and CNAME records
-✅ List all domains with folder paths
-✅ Delete domains (removes from database and DNS, keeps folder)
-✅ Update domain folder paths
-✅ Full API and UI support
+âœ… Create domains with automatic folder creation
+âœ… Auto-create DNS zones with default A and CNAME records
+âœ… List all domains with folder paths
+âœ… Delete domains (removes from database and DNS, keeps folder)
+âœ… Update domain folder paths
+âœ… Full API and UI support
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                            DOMAIN CREATION
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 FROM WEB UI:
 -----------
-1. Navigate to https://hpanel.sefion.cloud
+1. Navigate to https://clearPanel.sefion.cloud
 2. Login with your credentials
-3. Go to Tools → Domains
+3. Go to Tools â†’ Domains
 4. Click "Create A New Domain"
 5. Enter domain name (e.g., example.com)
 6. (Optional) Specify folder path or leave empty for default
@@ -35,7 +35,7 @@ Default folder: /home/sefion/Domains/[domain-name]
 
 FROM API:
 --------
-POST https://hpanel.sefion.cloud/api/domains
+POST https://clearPanel.sefion.cloud/api/domains
 Content-Type: application/json
 
 {
@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 
 Example curl:
-curl -X POST https://hpanel.sefion.cloud/api/domains \
+curl -X POST https://clearPanel.sefion.cloud/api/domains \
   -H "Content-Type: application/json" \
   -d '{"name":"mysite.com"}'
 
@@ -75,20 +75,20 @@ RESPONSE:
   }
 }
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                            LISTING DOMAINS
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 FROM WEB UI:
 -----------
-Navigate to Tools → Domains to see all domains in a table view
+Navigate to Tools â†’ Domains to see all domains in a table view
 
 FROM API:
 --------
-GET https://hpanel.sefion.cloud/api/domains
+GET https://clearPanel.sefion.cloud/api/domains
 
 Example curl:
-curl https://hpanel.sefion.cloud/api/domains
+curl https://clearPanel.sefion.cloud/api/domains
 
 RESPONSE:
 [
@@ -101,23 +101,23 @@ RESPONSE:
   ...
 ]
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                            DELETING DOMAINS
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 FROM WEB UI:
 -----------
-1. Navigate to Tools → Domains
+1. Navigate to Tools â†’ Domains
 2. Find the domain you want to delete
 3. Click the red delete icon (trash can) in the Actions column
 4. Confirm deletion in the popup dialog
 
 FROM API:
 --------
-DELETE https://hpanel.sefion.cloud/api/domains/:id
+DELETE https://clearPanel.sefion.cloud/api/domains/:id
 
 Example curl:
-curl -X DELETE https://hpanel.sefion.cloud/api/domains/94d5e3a4-4c1b-4859-a623-6e9a30622b76
+curl -X DELETE https://clearPanel.sefion.cloud/api/domains/94d5e3a4-4c1b-4859-a623-6e9a30622b76
 
 RESPONSE:
 {
@@ -137,53 +137,53 @@ IMPORTANT NOTES:
 - The domain folder is NOT deleted (preserved for safety)
 - You can manually delete folders: rm -rf /home/sefion/Domains/example.com
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                         DIRECTORY STRUCTURE
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 Base Directory: /home/sefion/Domains/
 
 Each domain gets its own folder:
 /home/sefion/Domains/
-├── example.com/
-│   └── (your website files here)
-├── mysite.com/
-│   └── (your website files here)
-└── another-domain.com/
-    └── (your website files here)
+â”œâ”€â”€ example.com/
+â”‚   â””â”€â”€ (your website files here)
+â”œâ”€â”€ mysite.com/
+â”‚   â””â”€â”€ (your website files here)
+â””â”€â”€ another-domain.com/
+    â””â”€â”€ (your website files here)
 
 File Manager shows: /home/sefion/
 - Domains/ (all domain folders)
 - public_html/ (shared public files)
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                         DNS ZONE AUTO-CREATION
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 When you create a domain, a DNS zone is automatically created with:
 
-1. A Record (@) → Points to 204.83.99.245
-2. CNAME Record (www) → Points to the domain
+1. A Record (@) â†’ Points to 204.83.99.245
+2. CNAME Record (www) â†’ Points to the domain
 
 You can edit these records in:
-- Web UI: Tools → DNS → Select domain
+- Web UI: Tools â†’ DNS â†’ Select domain
 - API: /api/dns/zones/:domain/records
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                         TROUBLESHOOTING
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 PROBLEM: Domain creation not working from UI
 SOLUTION: 
 - Check browser console (F12) for errors
 - Verify you are logged in
 - Try refreshing the page
-- Check backend logs: tail -f /home/hasim/Documents/project/hpanel/backend/server.log
+- Check backend logs: tail -f /home/hasim/Documents/project/clearPanel/backend/server.log
 
 PROBLEM: Domain folder not created
 SOLUTION:
 - Check permissions: ls -la /home/sefion/Domains/
-- Verify DOMAINS_ROOT in .env: cat /home/hasim/Documents/project/hpanel/backend/.env
+- Verify DOMAINS_ROOT in .env: cat /home/hasim/Documents/project/clearPanel/backend/.env
 - Check backend logs for errors
 
 PROBLEM: Delete button not showing
@@ -197,9 +197,9 @@ SOLUTION:
 - Verify nameservers at domain registrar
 - Check DNS records in Cloudflare or your provider
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                            FILES MODIFIED
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 Backend:
 - backend/src/domains/domains.controller.ts (added DELETE endpoint)
@@ -213,28 +213,28 @@ Frontend:
 Configuration:
 - backend/.env (DOMAINS_ROOT=/home/sefion/Domains)
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                            BACKEND STATUS
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 Server: Running on port 3334
-URL: https://hpanel.sefion.cloud
+URL: https://clearPanel.sefion.cloud
 Tunnel: Cloudflare Tunnel (cloudflared)
 Environment: Production
 
 Check status:
 - lsof -i :3334
-- tail -f /home/hasim/Documents/project/hpanel/backend/server.log
+- tail -f /home/hasim/Documents/project/clearPanel/backend/server.log
 - systemctl status cloudflared
 
 Restart backend:
-- bash /home/hasim/Documents/project/hpanel/start-backend.sh
+- bash /home/hasim/Documents/project/clearPanel/start-backend.sh
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                               NEXT STEPS
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-1. Test domain creation from UI at https://hpanel.sefion.cloud
+1. Test domain creation from UI at https://clearPanel.sefion.cloud
 2. Verify DNS zones are created automatically
 3. Test domain deletion from UI
 4. Configure nameservers at your domain registrar
@@ -243,14 +243,15 @@ Restart backend:
 
 See DOMAIN-SETUP-GUIDE.txt for web server configuration details.
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
                               SUPPORT
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-Logs: /home/hasim/Documents/project/hpanel/backend/server.log
-Config: /home/hasim/Documents/project/hpanel/backend/.env
-Tunnel Info: /home/hasim/Documents/project/hpanel/CLOUDFLARE-TUNNEL-INFO.txt
+Logs: /home/hasim/Documents/project/clearPanel/backend/server.log
+Config: /home/hasim/Documents/project/clearPanel/backend/.env
+Tunnel Info: /home/hasim/Documents/project/clearPanel/CLOUDFLARE-TUNNEL-INFO.txt
 
-For web server setup: /home/hasim/Documents/project/hpanel/DOMAIN-SETUP-GUIDE.txt
+For web server setup: /home/hasim/Documents/project/clearPanel/DOMAIN-SETUP-GUIDE.txt
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+

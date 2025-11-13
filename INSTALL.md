@@ -1,20 +1,20 @@
-# hPanel Installation Guide
+﻿# clearPanel Installation Guide
 
 ## Quick Install (Recommended)
 
 For a fresh VPS/server installation:
 
 ```bash
-git clone https://github.com/SefionITServices/hpanel.git
-cd hpanel
+git clone https://github.com/SefionITServices/clearPanel.git
+cd clearPanel
 sudo ./install.sh
 ```
 
 The script will automatically:
 - Detect your package manager (apt-get or dnf)
-- Install Node.js 18+ if needed
-- Create a dedicated `hpanel` system user
-- Build and install the application to `/opt/hpanel`
+- Install Node.js 20+ if needed
+- Create a dedicated `clearpanel` system user
+- Build and install the application to `/opt/clearpanel`
 - Configure systemd service
 - Setup nginx reverse proxy
 - Generate secure environment configuration
@@ -36,57 +36,57 @@ sudo apt-get install -y curl git nginx
 sudo dnf install -y curl git nginx
 ```
 
-### Install Node.js 18 LTS
+### Install Node.js 20 LTS
 
 #### Ubuntu/Debian
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash -
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
 sudo apt-get install -y nodejs
 ```
 
 #### CentOS/RHEL/AlmaLinux
 ```bash
-curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
 sudo dnf install -y nodejs
 ```
 
-### Install hPanel
+### Install clearPanel
 
 1. **Clone the repository**
    ```bash
    cd /opt
-   sudo git clone https://github.com/SefionITServices/hpanel.git
-   cd hpanel
+   sudo git clone https://github.com/SefionITServices/clearPanel.git
+   cd clearPanel
    ```
 
 2. **Create service user**
    ```bash
-   sudo useradd -r -s /bin/false -d /opt/hpanel hpanel
-   sudo mkdir -p /opt/hpanel/data
-   sudo chown -R hpanel:hpanel /opt/hpanel
+   sudo useradd -r -s /bin/false -d /opt/clearpanel clearpanel
+   sudo mkdir -p /opt/clearpanel/data
+   sudo chown -R clearpanel:clearpanel /opt/clearpanel
    ```
 
 3. **Install backend dependencies**
    ```bash
-   cd /opt/hpanel/backend
-   sudo -u hpanel npm install
+   cd /opt/clearpanel/backend
+   sudo -u clearpanel npm install
    ```
 
 4. **Build backend**
    ```bash
-   sudo -u hpanel npm run build
+   sudo -u clearpanel npm run build
    ```
 
 5. **Install and build frontend**
    ```bash
-   cd /opt/hpanel/frontend
-   sudo -u hpanel npm install
-   sudo -u hpanel npm run build
+   cd /opt/clearpanel/frontend
+   sudo -u clearpanel npm install
+   sudo -u clearpanel npm run build
    ```
 
 6. **Configure environment**
    ```bash
-   sudo nano /opt/hpanel/backend/.env
+   sudo nano /opt/clearpanel/backend/.env
    ```
    
    Add the following (customize as needed):
@@ -96,40 +96,40 @@ sudo dnf install -y nodejs
    SESSION_SECRET=your-random-secret-here
    ADMIN_USERNAME=admin
    ADMIN_PASSWORD=your-secure-password
-   ROOT_PATH=/opt/hpanel/data
+   ROOT_PATH=/opt/clearpanel/data
    ALLOWED_EXTENSIONS=*
    MAX_FILE_SIZE=104857600
    ```
 
 7. **Setup systemd service**
    ```bash
-   sudo cp /opt/hpanel/hpanel.service /etc/systemd/system/
+   sudo cp /opt/clearpanel/clearpanel.service /etc/systemd/system/
    sudo systemctl daemon-reload
-   sudo systemctl enable hpanel
-   sudo systemctl start hpanel
+   sudo systemctl enable clearpanel
+   sudo systemctl start clearpanel
    ```
 
 8. **Configure nginx**
 
    #### Ubuntu/Debian
    ```bash
-   sudo cp /opt/hpanel/nginx.conf.example /etc/nginx/sites-available/hpanel
-   sudo ln -s /etc/nginx/sites-available/hpanel /etc/nginx/sites-enabled/
+   sudo cp /opt/clearpanel/nginx.conf.example /etc/nginx/sites-available/clearpanel
+   sudo ln -s /etc/nginx/sites-available/clearpanel /etc/nginx/sites-enabled/
    sudo rm -f /etc/nginx/sites-enabled/default
    ```
 
    #### CentOS/RHEL/AlmaLinux
    ```bash
-   sudo cp /opt/hpanel/nginx.conf.example /etc/nginx/conf.d/hpanel.conf
+   sudo cp /opt/clearpanel/nginx.conf.example /etc/nginx/conf.d/clearpanel.conf
    ```
 
    Edit the config and replace `your-domain.com` with your actual domain:
    ```bash
    # Ubuntu/Debian
-   sudo nano /etc/nginx/sites-available/hpanel
+   sudo nano /etc/nginx/sites-available/clearpanel
    
    # CentOS/RHEL
-   sudo nano /etc/nginx/conf.d/hpanel.conf
+   sudo nano /etc/nginx/conf.d/clearpanel.conf
    ```
 
 9. **Start nginx**
@@ -145,14 +145,14 @@ sudo dnf install -y nodejs
 
 ### Verify Installation
 
-Check if hPanel is running:
+Check if clearPanel is running:
 ```bash
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 ```
 
 View logs:
 ```bash
-sudo journalctl -u hpanel -f
+sudo journalctl -u clearpanel -f
 ```
 
 ### Access the Panel
@@ -190,24 +190,24 @@ Certbot will automatically update your nginx configuration for HTTPS.
 
 ## Updating
 
-To update hPanel to the latest version:
+To update clearPanel to the latest version:
 
 ```bash
-cd /opt/hpanel
+cd /opt/clearpanel
 sudo ./deploy.sh
 ```
 
 Or manually:
 ```bash
-cd /opt/hpanel
+cd /opt/clearpanel
 sudo git pull
 cd frontend
-sudo -u hpanel npm install
-sudo -u hpanel npm run build
+sudo -u clearpanel npm install
+sudo -u clearpanel npm run build
 cd ../backend
-sudo -u hpanel npm install
-sudo -u hpanel npm run build
-sudo systemctl restart hpanel
+sudo -u clearpanel npm install
+sudo -u clearpanel npm run build
+sudo systemctl restart clearpanel
 ```
 
 ---
@@ -235,19 +235,19 @@ sudo firewall-cmd --reload
 ### Service won't start
 ```bash
 # Check logs
-sudo journalctl -u hpanel -n 50
+sudo journalctl -u clearpanel -n 50
 
 # Check if port is in use
 sudo ss -ltnp | grep :3334
 
 # Check file permissions
-ls -la /opt/hpanel/backend
+ls -la /opt/clearpanel/backend
 ```
 
 ### Nginx shows 502 Bad Gateway
 ```bash
 # Verify backend is running
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 
 # Check nginx error logs
 sudo tail -f /var/log/nginx/error.log
@@ -259,23 +259,23 @@ curl http://localhost:3334/api/auth/status
 ### Can't login
 ```bash
 # Verify environment variables
-sudo cat /opt/hpanel/backend/.env
+sudo cat /opt/clearpanel/backend/.env
 
 # Check session secret is set
-sudo grep SESSION_SECRET /opt/hpanel/backend/.env
+sudo grep SESSION_SECRET /opt/clearpanel/backend/.env
 
 # Restart service after changing .env
-sudo systemctl restart hpanel
+sudo systemctl restart clearpanel
 ```
 
 ### Permission issues
 ```bash
 # Fix ownership
-sudo chown -R hpanel:hpanel /opt/hpanel
-sudo chown -R hpanel:hpanel /opt/hpanel/data
+sudo chown -R clearpanel:clearpanel /opt/clearpanel
+sudo chown -R clearpanel:clearpanel /opt/clearpanel/data
 
 # Verify service user
-id hpanel
+id clearpanel
 ```
 
 ---
@@ -284,25 +284,25 @@ id hpanel
 
 ```bash
 # Start service
-sudo systemctl start hpanel
+sudo systemctl start clearpanel
 
 # Stop service
-sudo systemctl stop hpanel
+sudo systemctl stop clearpanel
 
 # Restart service
-sudo systemctl restart hpanel
+sudo systemctl restart clearpanel
 
 # View status
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 
 # View logs
-sudo journalctl -u hpanel -f
+sudo journalctl -u clearpanel -f
 
 # Enable on boot
-sudo systemctl enable hpanel
+sudo systemctl enable clearpanel
 
 # Disable on boot
-sudo systemctl disable hpanel
+sudo systemctl disable clearpanel
 ```
 
 ---
@@ -311,23 +311,23 @@ sudo systemctl disable hpanel
 
 ```bash
 # Stop and disable service
-sudo systemctl stop hpanel
-sudo systemctl disable hpanel
-sudo rm /etc/systemd/system/hpanel.service
+sudo systemctl stop clearpanel
+sudo systemctl disable clearpanel
+sudo rm /etc/systemd/system/clearpanel.service
 
 # Remove nginx config
-sudo rm /etc/nginx/sites-enabled/hpanel    # Ubuntu/Debian
-sudo rm /etc/nginx/sites-available/hpanel  # Ubuntu/Debian
-sudo rm /etc/nginx/conf.d/hpanel.conf      # CentOS/RHEL
+sudo rm /etc/nginx/sites-enabled/clearpanel    # Ubuntu/Debian
+sudo rm /etc/nginx/sites-available/clearpanel  # Ubuntu/Debian
+sudo rm /etc/nginx/conf.d/clearpanel.conf      # CentOS/RHEL
 
 # Restart nginx
 sudo systemctl restart nginx
 
 # Remove application
-sudo rm -rf /opt/hpanel
+sudo rm -rf /opt/clearpanel
 
 # Remove user
-sudo userdel hpanel
+sudo userdel clearpanel
 
 # Reload systemd
 sudo systemctl daemon-reload
@@ -339,9 +339,9 @@ sudo systemctl daemon-reload
 
 1. **Change default credentials immediately**
    ```bash
-   sudo nano /opt/hpanel/backend/.env
+   sudo nano /opt/clearpanel/backend/.env
    # Update ADMIN_USERNAME and ADMIN_PASSWORD
-   sudo systemctl restart hpanel
+   sudo systemctl restart clearpanel
    ```
 
 2. **Use strong SESSION_SECRET**
@@ -357,19 +357,19 @@ sudo systemctl daemon-reload
 
 4. **Restrict file access**
    ```bash
-   sudo chmod 600 /opt/hpanel/backend/.env
+   sudo chmod 600 /opt/clearpanel/backend/.env
    ```
 
 5. **Regular updates**
    ```bash
-   cd /opt/hpanel
+   cd /opt/clearpanel
    sudo git pull
    sudo ./deploy.sh
    ```
 
 6. **Monitor logs**
    ```bash
-   sudo journalctl -u hpanel -f
+   sudo journalctl -u clearpanel -f
    ```
 
 ---
@@ -377,5 +377,6 @@ sudo systemctl daemon-reload
 ## Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/SefionITServices/hpanel/issues
-- Documentation: https://github.com/SefionITServices/hpanel
+- GitHub Issues: https://github.com/SefionITServices/clearPanel/issues
+- Documentation: https://github.com/SefionITServices/clearPanel
+

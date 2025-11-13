@@ -1,4 +1,4 @@
-# hPanel Quick Start Guide
+﻿# clearPanel Quick Start Guide
 
 Get your hosting control panel running in 5 minutes.
 
@@ -15,8 +15,8 @@ Get your hosting control panel running in 5 minutes.
 
 ```bash
 cd /opt
-sudo git clone https://github.com/SefionITServices/clearPanel.git hpanel
-cd hpanel
+sudo git clone https://github.com/SefionITServices/clearPanel.git clearPanel
+cd clearPanel
 ```
 
 ### 2. Run Installer
@@ -27,11 +27,11 @@ sudo ./install.sh
 ```
 
 The installer automatically:
-- ✅ Installs Node.js and dependencies
-- ✅ Creates backend environment file
-- ✅ Builds the application
-- ✅ Sets up systemd service
-- ✅ Starts the panel
+- âœ… Installs Node.js and dependencies
+- âœ… Creates backend environment file
+- âœ… Builds the application
+- âœ… Sets up systemd service
+- âœ… Starts the panel
 
 ### 3. Configure Environment
 
@@ -57,7 +57,7 @@ SESSION_SECRET=run_openssl_rand_-hex_32
 Save and restart:
 
 ```bash
-sudo systemctl restart hpanel
+sudo systemctl restart clearPanel
 ```
 
 ### 4. Configure Firewall
@@ -111,12 +111,12 @@ Login with your credentials from `.env`
 
 ### Create Your First Domain
 
-1. **Login** to hPanel
-2. **Navigate** to Domains → Add Domain
+1. **Login** to clearPanel
+2. **Navigate** to Domains â†’ Add Domain
 3. **Enter** domain name (e.g., `mywebsite.com`)
 4. **Click** Create Domain
 
-hPanel automatically:
+clearPanel automatically:
 - Creates domain folder
 - Configures nginx virtual host
 - Creates DNS zone with nameservers
@@ -130,8 +130,8 @@ From the nameserver instructions provided:
 - Go to your domain registrar
 - Find "Nameservers" or "Glue Records" settings
 - Add:
-  - `ns1.mywebsite.com` → `your-vps-ip`
-  - `ns2.mywebsite.com` → `your-vps-ip`
+  - `ns1.mywebsite.com` â†’ `your-vps-ip`
+  - `ns2.mywebsite.com` â†’ `your-vps-ip`
 
 **Step 2: Set Custom Nameservers**
 - Change nameservers to:
@@ -194,7 +194,7 @@ sudo dnf install -y nginx
 ### 2. Configure Panel Access
 
 ```bash
-sudo nano /etc/nginx/sites-available/hpanel
+sudo nano /etc/nginx/sites-available/clearPanel
 ```
 
 Add:
@@ -216,7 +216,7 @@ server {
 
 Enable and restart:
 ```bash
-sudo ln -s /etc/nginx/sites-available/hpanel /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/clearPanel /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 ```
@@ -254,13 +254,13 @@ cloudflared tunnel login
 ### 3. Create Tunnel
 
 ```bash
-cloudflared tunnel create hpanel
+cloudflared tunnel create clearPanel
 ```
 
 ### 4. Configure DNS
 
 ```bash
-cloudflared tunnel route dns hpanel panel.yourdomain.com
+cloudflared tunnel route dns clearPanel panel.yourdomain.com
 ```
 
 ### 5. Create Config
@@ -299,8 +299,8 @@ https://panel.yourdomain.com
 ### Check Services
 
 ```bash
-# Check hPanel backend
-sudo systemctl status hpanel
+# Check clearPanel backend
+sudo systemctl status clearPanel
 
 # Check BIND9 DNS
 sudo systemctl status bind9  # or named
@@ -315,8 +315,8 @@ sudo systemctl status cloudflared
 ### Check Logs
 
 ```bash
-# hPanel logs
-sudo journalctl -u hpanel -f
+# clearPanel logs
+sudo journalctl -u clearPanel -f
 
 # DNS logs
 sudo journalctl -u bind9 -f  # or named
@@ -340,8 +340,8 @@ curl http://localhost:3334/api/domains
 ### Service Management
 
 ```bash
-# Restart hPanel
-sudo systemctl restart hpanel
+# Restart clearPanel
+sudo systemctl restart clearPanel
 
 # Restart DNS server
 sudo systemctl restart bind9  # or named
@@ -349,8 +349,8 @@ sudo systemctl restart bind9  # or named
 # Reload nginx
 sudo systemctl reload nginx
 
-# View hPanel logs
-sudo journalctl -u hpanel -n 50
+# View clearPanel logs
+sudo journalctl -u clearPanel -n 50
 ```
 
 ### DNS Operations
@@ -372,8 +372,8 @@ dig @localhost example.com
 # Fix domain folder permissions
 sudo chown -R sefion:sefion /home/sefion/Domains/
 
-# Fix hPanel permissions
-sudo chown -R hpanel:hpanel /opt/hpanel/
+# Fix clearPanel permissions
+sudo chown -R clearPanel:clearPanel /opt/clearPanel/
 ```
 
 ## Troubleshooting
@@ -382,10 +382,10 @@ sudo chown -R hpanel:hpanel /opt/hpanel/
 
 ```bash
 # Check logs
-sudo journalctl -u hpanel -n 50
+sudo journalctl -u clearPanel -n 50
 
 # Test manually
-cd /opt/hpanel/backend
+cd /opt/clearPanel/backend
 node dist/main.js
 
 # Check port conflicts
@@ -415,7 +415,7 @@ sudo journalctl -u bind9 -n 50
 sudo ufw status  # or firewall-cmd --list-all
 
 # Check service running
-sudo systemctl status hpanel
+sudo systemctl status clearPanel
 
 # Check nginx (if used)
 sudo nginx -t
@@ -425,8 +425,8 @@ sudo systemctl status nginx
 ### Domain creation fails
 
 ```bash
-# Check hPanel logs
-sudo journalctl -u hpanel -f
+# Check clearPanel logs
+sudo journalctl -u clearPanel -f
 
 # Try creating manually:
 sudo mkdir -p /home/sefion/Domains/testdomain.com
@@ -437,13 +437,13 @@ ls -la /home/sefion/Domains/
 
 ## Next Steps
 
-1. ✅ **Add more domains** via Domains → Add Domain
-2. ✅ **Manage DNS records** via DNS editor
-3. ✅ **Upload website files** via File Manager
-4. ✅ **Set up email** (coming soon)
-5. ✅ **Configure SSL** for hosted domains
-6. ✅ **Set up backups** for critical data
-7. ✅ **Monitor resources** (coming soon)
+1. âœ… **Add more domains** via Domains â†’ Add Domain
+2. âœ… **Manage DNS records** via DNS editor
+3. âœ… **Upload website files** via File Manager
+4. âœ… **Set up email** (coming soon)
+5. âœ… **Configure SSL** for hosted domains
+6. âœ… **Set up backups** for critical data
+7. âœ… **Monitor resources** (coming soon)
 
 ## Resources
 
@@ -454,10 +454,11 @@ ls -la /home/sefion/Domains/
 
 ## Get Help
 
-- Check logs: `sudo journalctl -u hpanel -f`
+- Check logs: `sudo journalctl -u clearPanel -f`
 - Test API: `curl http://localhost:3334/api/dns-server/status`
 - GitHub Issues: Report bugs and request features
 
 ---
 
-**Welcome to hPanel!** You're now running your own hosting control panel. 🎉
+**Welcome to clearPanel!** You're now running your own hosting control panel. ðŸŽ‰
+

@@ -50,7 +50,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     <Box>
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          hPanel
+          clearPanel
         </Typography>
       </Toolbar>
       <List>

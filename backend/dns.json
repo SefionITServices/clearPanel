@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "domain": "sefion.cloud",
     "records": [
@@ -17,16 +17,16 @@
         "ttl": 300
       },
       {
-        "id": "sefion-hpanel-a-1",
+        "id": "sefion-clearPanel-a-1",
         "type": "A",
-        "name": "hpanel",
+        "name": "clearPanel",
         "value": "172.67.199.190",
         "ttl": 300
       },
       {
-        "id": "sefion-hpanel-a-2",
+        "id": "sefion-clearPanel-a-2",
         "type": "A",
-        "name": "hpanel",
+        "name": "clearPanel",
         "value": "104.21.44.124",
         "ttl": 300
       }

@@ -228,7 +228,7 @@ export default function DomainsListView() {
         <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
           <DialogTitle>Delete Domain</DialogTitle>
           <DialogContent>
-            Are you sure you want to delete domain "{target?.name}"? This will remove its DNS zone from hPanel but keep the folder on disk.
+            Are you sure you want to delete domain "{target?.name}"? This will remove its DNS zone from clearPanel but keep the folder on disk.
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>

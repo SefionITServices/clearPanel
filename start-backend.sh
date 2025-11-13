@@ -1,7 +1,7 @@
 #!/bin/bash
-# hPanel Backend Startup Script
+# clearPanel Backend Startup Script
 
-cd /home/hasim/Documents/project/hpanel/backend
+cd /home/hasim/Documents/project/clearPanel/backend
 
 # Load environment variables from .env file
 export $(grep -v '^#' .env | xargs)
@@ -15,6 +15,6 @@ fi
 nohup node dist/main.js > server.log 2>&1 &
 
 echo "Backend started with PID $!"
-echo "Logs: /home/hasim/Documents/project/hpanel/backend/server.log"
+echo "Logs: /home/hasim/Documents/project/clearPanel/backend/server.log"
 echo "Config: PORT=$PORT, NODE_ENV=$NODE_ENV"
 echo "Paths: ROOT_PATH=$ROOT_PATH, DOMAINS_ROOT=$DOMAINS_ROOT"

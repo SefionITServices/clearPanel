@@ -1,12 +1,12 @@
-# hpanel frontend
+﻿# clearPanel frontend
 
 Fresh Vite + React + TypeScript starter.
 
 ## Scripts
 
-- `npm run dev` – start development server (defaults to port 8080, will switch if busy)
-- `npm run build` – type-check and build to `dist/`
-- `npm run preview` – preview the production build
+- `npm run dev` â€“ start development server (defaults to port 8080, will switch if busy)
+- `npm run build` â€“ type-check and build to `dist/`
+- `npm run preview` â€“ preview the production build
 
 ## API Proxy
 Requests to `/api/*` are proxied to `http://localhost:3334` (configure in `vite.config.ts`).
@@ -34,3 +34,4 @@ sudo sysctl -p
 ## Next Steps
 - Integrate routing and UI components.
 - Add ESLint + Prettier config if desired.
+

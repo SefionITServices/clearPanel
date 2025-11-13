@@ -1,9 +1,9 @@
-#!/bin/bash
+﻿#!/bin/bash
 
-# hPanel - External Access Diagnostic Tool
-echo "╔═══════════════════════════════════════════════════════════════╗"
-echo "║       hPanel External Access Troubleshooting                  ║"
-echo "╚═══════════════════════════════════════════════════════════════╝"
+# clearPanel - External Access Diagnostic Tool
+echo "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—"
+echo "â•‘       clearPanel External Access Troubleshooting                  â•‘"
+echo "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•"
 echo ""
 
 # Colors
@@ -17,25 +17,25 @@ NC='\033[0m' # No Color
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "Unable to detect")
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📊 NETWORK INFORMATION"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ“Š NETWORK INFORMATION"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 echo "Local IP:  $LOCAL_IP"
 echo "Public IP: $PUBLIC_IP"
 echo "Port:      3334"
 echo ""
 
 # Check if server is running
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🔍 SERVER STATUS CHECKS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ” SERVER STATUS CHECKS"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 
 if lsof -i :3334 > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ Server is running on port 3334${NC}"
+    echo -e "${GREEN}âœ“ Server is running on port 3334${NC}"
     BINDING=$(lsof -i :3334 | grep LISTEN | awk '{print $9}')
     echo "  Binding: $BINDING"
 else
-    echo -e "${RED}✗ Server is NOT running on port 3334${NC}"
+    echo -e "${RED}âœ— Server is NOT running on port 3334${NC}"
     echo "  Run: ./start-online.sh"
     exit 1
 fi
@@ -44,34 +44,34 @@ fi
 echo ""
 echo "Testing localhost (127.0.0.1:3334)..."
 if curl -s --max-time 3 http://localhost:3334/api/auth/status > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ Localhost access works${NC}"
+    echo -e "${GREEN}âœ“ Localhost access works${NC}"
 else
-    echo -e "${RED}✗ Localhost access failed${NC}"
+    echo -e "${RED}âœ— Localhost access failed${NC}"
 fi
 
 # Test LAN IP
 echo ""
 echo "Testing LAN IP ($LOCAL_IP:3334)..."
 if curl -s --max-time 3 http://$LOCAL_IP:3334/api/auth/status > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ LAN access works${NC}"
+    echo -e "${GREEN}âœ“ LAN access works${NC}"
 else
-    echo -e "${RED}✗ LAN access failed${NC}"
+    echo -e "${RED}âœ— LAN access failed${NC}"
 fi
 
 # Check firewall
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🛡️  FIREWALL STATUS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ›¡ï¸  FIREWALL STATUS"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 
 if command -v ufw &> /dev/null; then
     UFW_STATUS=$(sudo ufw status 2>/dev/null | grep "Status:" | awk '{print $2}')
     if [ "$UFW_STATUS" = "active" ]; then
         echo -e "${YELLOW}UFW Firewall: Active${NC}"
         if sudo ufw status | grep -q "3334"; then
-            echo -e "${GREEN}✓ Port 3334 is allowed in UFW${NC}"
+            echo -e "${GREEN}âœ“ Port 3334 is allowed in UFW${NC}"
         else
-            echo -e "${RED}✗ Port 3334 is NOT allowed in UFW${NC}"
+            echo -e "${RED}âœ— Port 3334 is NOT allowed in UFW${NC}"
             echo "  Fix: sudo ufw allow 3334/tcp"
         fi
     else
@@ -83,16 +83,16 @@ fi
 
 # Check if behind NAT
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🌐 INTERNET CONNECTIVITY"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸŒ INTERNET CONNECTIVITY"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 
 if [[ $LOCAL_IP == 192.168.* ]] || [[ $LOCAL_IP == 10.* ]] || [[ $LOCAL_IP == 172.16.* ]]; then
-    echo -e "${YELLOW}⚠ You are behind NAT (private IP)${NC}"
+    echo -e "${YELLOW}âš  You are behind NAT (private IP)${NC}"
     echo "  This is normal for home networks."
     echo "  You MUST configure router port forwarding."
 else
-    echo -e "${GREEN}✓ Direct public IP${NC}"
+    echo -e "${GREEN}âœ“ Direct public IP${NC}"
     echo "  No router port forwarding needed."
 fi
 
@@ -106,19 +106,19 @@ PORT_TEST=$(timeout $TIMEOUT curl -s "https://api.hackertarget.com/nmap/?q=$PUBL
 
 if [ ! -z "$PORT_TEST" ]; then
     if echo "$PORT_TEST" | grep -q "open"; then
-        echo -e "${GREEN}✓ Port 3334 appears OPEN from internet${NC}"
+        echo -e "${GREEN}âœ“ Port 3334 appears OPEN from internet${NC}"
     else
-        echo -e "${RED}✗ Port 3334 appears CLOSED from internet${NC}"
+        echo -e "${RED}âœ— Port 3334 appears CLOSED from internet${NC}"
     fi
 else
-    echo -e "${YELLOW}⚠ Unable to test external port automatically${NC}"
+    echo -e "${YELLOW}âš  Unable to test external port automatically${NC}"
     echo "  Manual test required (see below)"
 fi
 
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📋 TROUBLESHOOTING CHECKLIST"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ“‹ TROUBLESHOOTING CHECKLIST"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 echo ""
 
 echo -e "${BLUE}1. ROUTER PORT FORWARDING (MOST COMMON ISSUE)${NC}"
@@ -134,13 +134,13 @@ echo ""
 echo "   c) Find 'Port Forwarding' or 'Virtual Server' section"
 echo ""
 echo "   d) Add this rule:"
-echo "      ┌────────────────────────────────────────┐"
-echo "      │ Service Name:    hPanel                │"
-echo "      │ External Port:   3334                  │"
-echo "      │ Internal IP:     $LOCAL_IP       │"
-echo "      │ Internal Port:   3334                  │"
-echo "      │ Protocol:        TCP                   │"
-echo "      └────────────────────────────────────────┘"
+echo "      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”"
+echo "      â”‚ Service Name:    clearPanel                â”‚"
+echo "      â”‚ External Port:   3334                  â”‚"
+echo "      â”‚ Internal IP:     $LOCAL_IP       â”‚"
+echo "      â”‚ Internal Port:   3334                  â”‚"
+echo "      â”‚ Protocol:        TCP                   â”‚"
+echo "      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜"
 echo ""
 echo "   e) Save and apply settings"
 echo ""
@@ -166,9 +166,9 @@ echo "   - If NO: You're behind CGNAT (contact ISP or use tunneling)"
 echo "   - If YES: Port forwarding should work"
 echo ""
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🧪 MANUAL TESTING"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ§ª MANUAL TESTING"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 echo ""
 echo "After configuring port forwarding, test from OUTSIDE your network:"
 echo ""
@@ -184,18 +184,18 @@ echo "Option 3: From another network (friend's house, cafe)"
 echo "   curl http://$PUBLIC_IP:3334/api/auth/status"
 echo ""
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🔧 ROUTER ACCESS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ”§ ROUTER ACCESS"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 echo ""
 GATEWAY=$(ip route | grep default | awk '{print $3}')
 echo "Your router gateway IP: $GATEWAY"
 echo "Try accessing: http://$GATEWAY"
 echo ""
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🚀 ALTERNATIVE SOLUTIONS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸš€ ALTERNATIVE SOLUTIONS"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 echo ""
 echo "If port forwarding doesn't work or isn't possible:"
 echo ""
@@ -216,15 +216,16 @@ echo "   - Free for personal use"
 echo "   - Setup: https://tailscale.com/"
 echo ""
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📞 NEED HELP?"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
+echo "ðŸ“ž NEED HELP?"
+echo "â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”"
 echo ""
 echo "Common router brands port forwarding guides:"
-echo "  • TP-Link: https://www.tp-link.com/us/support/faq/84/"
-echo "  • Netgear: https://kb.netgear.com/24290/How-do-I-add-a-port-forwarding-rule"
-echo "  • D-Link: https://support.dlink.com/faq/view.aspx?prod=DIR-868L&faqid=144"
-echo "  • Linksys: https://www.linksys.com/support-article?articleNum=138535"
+echo "  â€¢ TP-Link: https://www.tp-link.com/us/support/faq/84/"
+echo "  â€¢ Netgear: https://kb.netgear.com/24290/How-do-I-add-a-port-forwarding-rule"
+echo "  â€¢ D-Link: https://support.dlink.com/faq/view.aspx?prod=DIR-868L&faqid=144"
+echo "  â€¢ Linksys: https://www.linksys.com/support-article?articleNum=138535"
 echo ""
 echo "Run this script anytime: ./diagnose-external.sh"
 echo ""
+

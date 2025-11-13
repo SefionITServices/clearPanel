@@ -19,9 +19,9 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../layouts/dashboard/layout';
 
-// Note: Backend defaults to ~/hpanel-domains/{domain} if no path provided
+// Note: Backend defaults to ~/clearpanel-domains/{domain} if no path provided
 // Leaving folderPath empty will use backend defaults
-const MAIN_USER_HOME = '/home/user/hpanel-domains';  // Example path shown in UI
+const MAIN_USER_HOME = '/home/user/clearpanel-domains';  // Example path shown in UI
 const MAIN_PUBLIC_HTML = `${MAIN_USER_HOME}/public_html`;
 const MAIN_DOMAIN = 'example.com';
 
@@ -53,7 +53,7 @@ export default function DomainCreatePage() {
       } else if (folderPath && folderPath.trim()) {
         payload.folderPath = folderPath.trim();
       }
-      // If folderPath is empty/undefined, backend uses default: ~/hpanel-domains/{domain}
+      // If folderPath is empty/undefined, backend uses default: ~/clearpanel-domains/{domain}
       
       const response = await fetch('/api/domains', {
         method: 'POST',
@@ -145,7 +145,7 @@ export default function DomainCreatePage() {
                   <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
                     {shareRoot 
                       ? 'Using shared document root directory.'
-                      : 'Leave empty to use auto-generated path (~/hpanel-domains/{domain}), or specify a custom directory.'
+                      : 'Leave empty to use auto-generated path (~/clearpanel-domains/{domain}), or specify a custom directory.'
                     }
                   </Typography>
                   <TextField

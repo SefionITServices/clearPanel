@@ -1,5 +1,5 @@
 #!/bin/bash
-# Domain Web Server Setup Script for hPanel
+# Domain Web Server Setup Script for clearPanel
 
 DOMAIN=$1
 DOMAIN_ROOT="/home/sefion/Domains/$DOMAIN"
@@ -10,20 +10,21 @@ if [ -z "$DOMAIN" ]; then
     exit 1
 fi
 
-echo "═══════════════════════════════════════════════════════════════"
+echo "=============================================================="
 echo "  Setting up web server for: $DOMAIN"
-echo "═══════════════════════════════════════════════════════════════"
+echo "=============================================================="
+echo ""
 
 # Check if Nginx is installed
 if ! command -v nginx &> /dev/null; then
-    echo "❌ Nginx not installed."
+    echo "Nginx not installed."
     echo ""
     read -p "Do you want to install Nginx? (y/n): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         sudo apt update
         sudo apt install nginx -y
-        echo "✅ Nginx installed successfully"
+        echo "Nginx installed successfully"
     else
         echo "Aborted. Please install Nginx manually: sudo apt install nginx"
         exit 1
@@ -32,46 +33,46 @@ fi
 
 # Check if domain folder exists
 if [ ! -d "$DOMAIN_ROOT" ]; then
-    echo "⚠️  Domain folder not found: $DOMAIN_ROOT"
-    read -p "Create domain in hPanel first. Continue anyway? (y/n): " -n 1 -r
+    echo "Domain folder not found: $DOMAIN_ROOT"
+    read -p "Create domain in clearPanel first. Continue anyway? (y/n): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         exit 1
     fi
     mkdir -p "$DOMAIN_ROOT"
-    echo "✅ Created domain folder"
+    echo "Created domain folder"
 fi
 
 # Create Nginx config
 NGINX_CONFIG="/etc/nginx/sites-available/$DOMAIN"
-echo "📝 Creating Nginx configuration..."
+echo "Creating Nginx configuration..."
 
 sudo tee "$NGINX_CONFIG" > /dev/null <<EOF
 server {
     listen 80;
     listen [::]:80;
-    
+
     server_name $DOMAIN www.$DOMAIN;
-    
+
     root $DOMAIN_ROOT;
     index index.html index.htm index.php;
-    
+
     # Logging
     access_log /var/log/nginx/${DOMAIN}_access.log;
     error_log /var/log/nginx/${DOMAIN}_error.log;
-    
+
     location / {
-        try_files \$uri \$uri/ =404;
+        try_files $uri $uri/ =404;
     }
-    
+
     # PHP support (if PHP-FPM is installed)
-    location ~ \.php\$ {
+    location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
     }
-    
+
     # Deny access to hidden files
     location ~ /\. {
         deny all;
@@ -79,24 +80,22 @@ server {
 }
 EOF
 
-echo "✅ Nginx config created: $NGINX_CONFIG"
+echo "Nginx config created: $NGINX_CONFIG"
 
 # Enable site
 if [ ! -L "/etc/nginx/sites-enabled/$DOMAIN" ]; then
     sudo ln -s "$NGINX_CONFIG" "/etc/nginx/sites-enabled/$DOMAIN"
-    echo "✅ Site enabled"
+    echo "Site enabled"
 fi
 
 # Test Nginx configuration
-echo "🔍 Testing Nginx configuration..."
+echo "Testing Nginx configuration..."
 if sudo nginx -t; then
-    echo "✅ Nginx configuration is valid"
-    
-    # Reload Nginx
+    echo "Nginx configuration is valid"
     sudo systemctl reload nginx
-    echo "✅ Nginx reloaded"
+    echo "Nginx reloaded"
 else
-    echo "❌ Nginx configuration test failed"
+    echo "Nginx configuration test failed"
     echo "Please check the configuration and try again"
     exit 1
 fi
@@ -134,34 +133,34 @@ if [ ! -f "$DOMAIN_ROOT/index.html" ]; then
 </head>
 <body>
     <div class="container">
-        <h1>🎉 Welcome!</h1>
+        <h1>Welcome!</h1>
         <p>Your website <strong>$DOMAIN</strong> is now live!</p>
         <p>Upload your website files to: <code>$DOMAIN_ROOT</code></p>
     </div>
 </body>
 </html>
 EOF
-    echo "✅ Created sample index.html"
+    echo "Created sample index.html"
 fi
 
 echo ""
-echo "═══════════════════════════════════════════════════════════════"
-echo "  ✅ Setup Complete!"
-echo "═══════════════════════════════════════════════════════════════"
+echo "=============================================================="
+echo "  Setup Complete!"
+echo "=============================================================="
 echo ""
 echo "Next steps:"
 echo ""
 echo "1. Point your domain DNS to this server:"
-echo "   → Add A record: $DOMAIN → 204.83.99.245"
-echo "   → Add A record: www.$DOMAIN → 204.83.99.245"
+echo "   Add A record: $DOMAIN -> 204.83.99.245"
+echo "   Add A record: www.$DOMAIN -> 204.83.99.245"
 echo ""
 echo "2. Open firewall ports (if needed):"
 echo "   sudo ufw allow 80/tcp"
 echo "   sudo ufw allow 443/tcp"
 echo ""
 echo "3. Configure router port forwarding:"
-echo "   External Port 80 → 172.16.1.211:80"
-echo "   External Port 443 → 172.16.1.211:443"
+echo "   External Port 80 -> 172.16.1.211:80"
+echo "   External Port 443 -> 172.16.1.211:443"
 echo ""
 echo "4. Add SSL certificate (recommended):"
 echo "   sudo apt install certbot python3-certbot-nginx"
@@ -171,4 +170,4 @@ echo "5. Upload your website files to:"
 echo "   $DOMAIN_ROOT"
 echo ""
 echo "Test your site: http://$DOMAIN"
-echo "═══════════════════════════════════════════════════════════════"
+echo "=============================================================="

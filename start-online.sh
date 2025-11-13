@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# hPanel Quick Start Script for Internet Access
+# clearPanel Quick Start Script for Internet Access
 set -e
 
 echo "========================================="
-echo "hPanel - Making Server Accessible Online"
+echo "clearPanel - Making Server Accessible Online"
 echo "========================================="
 
 # Colors
@@ -29,9 +29,9 @@ if lsof -ti:3334 > /dev/null 2>&1; then
     echo -e "${GREEN}✓ Backend is already running on port 3334${NC}"
 else
     echo -e "${YELLOW}Starting backend server...${NC}"
-    BACKEND_DIR="/home/hasim/Documents/project/hpanel/backend"
+    BACKEND_DIR="/home/hasim/Documents/project/clearPanel/backend"
     cd "$BACKEND_DIR"
-    nohup node dist/main.js > /home/hasim/Documents/project/hpanel/logs/backend.log 2>&1 &
+    nohup node dist/main.js > /home/hasim/Documents/project/clearPanel/logs/backend.log 2>&1 &
     sleep 2
     if lsof -ti:3334 > /dev/null 2>&1; then
         echo -e "${GREEN}✓ Backend started successfully${NC}"
@@ -93,5 +93,5 @@ if command -v ufw &> /dev/null; then
     echo ""
 fi
 
-echo "View logs: tail -f /home/hasim/Documents/project/hpanel/logs/backend.log"
+echo "View logs: tail -f /home/hasim/Documents/project/clearPanel/logs/backend.log"
 echo ""

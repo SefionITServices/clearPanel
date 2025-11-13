@@ -1,8 +1,8 @@
-# DNS Server Feature - Own Nameserver on VPS
+﻿# DNS Server Feature - Own Nameserver on VPS
 
 ## Overview
 
-hPanel now includes built-in BIND9 DNS server integration. When you add a domain, the system automatically:
+clearPanel now includes built-in BIND9 DNS server integration. When you add a domain, the system automatically:
 1. Creates a DNS zone file with nameserver records
 2. Configures BIND9 to serve authoritative DNS for that domain
 3. Provides instructions for pointing your domain to this VPS as the nameserver
@@ -25,8 +25,8 @@ This makes your VPS a **fully functional DNS server** that responds to DNS queri
 
 ### 1. Install BIND9 on Your VPS
 
-**Option A: Via hPanel UI**
-- Go to Settings → DNS Server
+**Option A: Via clearPanel UI**
+- Go to Settings â†’ DNS Server
 - Click "Install BIND9"
 - Wait for installation to complete
 
@@ -80,8 +80,8 @@ sudo systemctl status bind9  # or named on CentOS
 
 ### When You Create a Domain
 
-1. Add a domain via hPanel (e.g., `mywebsite.com`)
-2. hPanel automatically:
+1. Add a domain via clearPanel (e.g., `mywebsite.com`)
+2. clearPanel automatically:
    - Creates `/etc/bind/zones/db.mywebsite.com`
    - Adds zone to `/etc/bind/named.conf.local`
    - Reloads BIND9
@@ -106,10 +106,10 @@ When you create a domain, the API returns:
 
 **Step 1: Create Glue Records**
 At your domain registrar (GoDaddy, Namecheap, etc.):
-- Go to domain settings → Nameservers/Glue Records
+- Go to domain settings â†’ Nameservers/Glue Records
 - Create:
-  - `ns1.mywebsite.com` → `204.83.99.245` (your VPS IP)
-  - `ns2.mywebsite.com` → `204.83.99.245`
+  - `ns1.mywebsite.com` â†’ `204.83.99.245` (your VPS IP)
+  - `ns2.mywebsite.com` â†’ `204.83.99.245`
 
 **Step 2: Set Custom Nameservers**
 - Change nameservers to:
@@ -209,7 +209,7 @@ Response:
 
 ## Managing DNS Records
 
-Once the zone is created, you can add/edit records via hPanel's DNS editor:
+Once the zone is created, you can add/edit records via clearPanel's DNS editor:
 - A records (IPv4)
 - AAAA records (IPv6)
 - CNAME records (aliases)
@@ -299,8 +299,8 @@ For redundancy, set up a secondary DNS server:
 1. Install BIND on a second VPS
 2. Configure slave zones
 3. Update glue records:
-   - ns1.mydomain.com → Primary VPS IP
-   - ns2.mydomain.com → Secondary VPS IP
+   - ns1.mydomain.com â†’ Primary VPS IP
+   - ns2.mydomain.com â†’ Secondary VPS IP
 
 ### Custom DNS Records
 
@@ -311,32 +311,32 @@ sudo nano /etc/bind/zones/db.mydomain.com
 sudo systemctl reload bind9
 ```
 
-Or use hPanel's DNS editor for a GUI.
+Or use clearPanel's DNS editor for a GUI.
 
 ## Benefits
 
-✅ **Full DNS Control** - Manage all record types  
-✅ **Fast Updates** - Changes take effect immediately (no registrar delays)  
-✅ **Professional Setup** - Custom nameservers (ns1.yourdomain.com)  
-✅ **Cost Savings** - No need for premium DNS services  
-✅ **Privacy** - Your DNS data stays on your VPS  
-✅ **Learning** - Understand how DNS works at a deep level  
+âœ… **Full DNS Control** - Manage all record types  
+âœ… **Fast Updates** - Changes take effect immediately (no registrar delays)  
+âœ… **Professional Setup** - Custom nameservers (ns1.yourdomain.com)  
+âœ… **Cost Savings** - No need for premium DNS services  
+âœ… **Privacy** - Your DNS data stays on your VPS  
+âœ… **Learning** - Understand how DNS works at a deep level  
 
 ## Limitations
 
-⚠️ **Single Point of Failure** - If your VPS goes down, DNS fails  
-⚠️ **Redundancy Required** - Production sites should have secondary nameserver  
-⚠️ **Propagation Delay** - Initial setup takes 24-48 hours  
-⚠️ **Technical Knowledge** - Requires basic DNS understanding  
+âš ï¸ **Single Point of Failure** - If your VPS goes down, DNS fails  
+âš ï¸ **Redundancy Required** - Production sites should have secondary nameserver  
+âš ï¸ **Propagation Delay** - Initial setup takes 24-48 hours  
+âš ï¸ **Technical Knowledge** - Requires basic DNS understanding  
 
 ## Next Steps
 
 After setting up DNS:
-1. ✅ Point domain nameservers to your VPS
-2. ✅ Add additional DNS records (MX, TXT, etc.)
-3. ✅ Set up email with proper MX and SPF records
-4. ✅ Configure SSL certificates (works with custom DNS)
-5. ✅ Monitor DNS query logs for troubleshooting
+1. âœ… Point domain nameservers to your VPS
+2. âœ… Add additional DNS records (MX, TXT, etc.)
+3. âœ… Set up email with proper MX and SPF records
+4. âœ… Configure SSL certificates (works with custom DNS)
+5. âœ… Monitor DNS query logs for troubleshooting
 
 ## Resources
 
@@ -344,3 +344,4 @@ After setting up DNS:
 - [DNS Record Types](https://en.wikipedia.org/wiki/List_of_DNS_record_types)
 - [How DNS Works](https://howdns.works/)
 - [DNS Propagation Checker](https://www.whatsmydns.net/)
+

@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Deploying hPanel..."
+echo "🚀 Deploying clearPanel..."
 
 # Configuration
-PROJECT_DIR="/opt/hpanel"
+PROJECT_DIR="/opt/clearpanel"
 BACKEND_DIR="$PROJECT_DIR/backend"
 FRONTEND_DIR="$PROJECT_DIR/frontend"
-SERVICE_NAME="hpanel"
+SERVICE_NAME="clearpanel"
 
 # Colors
 GREEN='\033[0;32m'
@@ -44,7 +44,7 @@ npm run build
 
 # Ensure public directory permissions
 echo -e "${YELLOW}🔐 Setting permissions...${NC}"
-sudo chown -R hpanel:hpanel "$BACKEND_DIR/public"
+sudo chown -R clearpanel:clearpanel "$BACKEND_DIR/public"
 sudo chmod -R 755 "$BACKEND_DIR/public"
 
 # Restart service
@@ -66,5 +66,5 @@ else
 fi
 
 echo ""
-echo -e "${GREEN}🎉 hPanel deployed successfully!${NC}"
+echo -e "${GREEN}🎉 clearPanel deployed successfully!${NC}"
 echo ""

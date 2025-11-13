@@ -1,4 +1,4 @@
-# hPanel - Web Hosting Control Panel
+# clearPanel - Web Hosting Control Panel
 
 A modern, plug-and-play web hosting control panel for any VPS. Features automatic domain provisioning, DNS server integration, web server automation, and file management.
 
@@ -53,6 +53,7 @@ A modern, plug-and-play web hosting control panel for any VPS. Features automati
 
 ### Automated Installation
 
+git clone https://github.com/SefionITServices/clearPanel.git
 ```bash
 # Clone repository
 git clone https://github.com/SefionITServices/clearPanel.git
@@ -82,8 +83,8 @@ See detailed guides:
 
 **Ubuntu/Debian:**
 ```bash
-# Install Node.js 18.x
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+# Install Node.js 20.x
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # Install nginx
@@ -95,8 +96,8 @@ sudo apt-get install -y bind9 bind9utils
 
 **CentOS/AlmaLinux/RHEL:**
 ```bash
-# Install Node.js 18.x
-curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+# Install Node.js 20.x
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
 sudo dnf install -y nodejs
 
 # Install nginx
@@ -111,8 +112,8 @@ sudo dnf install -y bind bind-utils
 ```bash
 # Clone or download
 cd /opt
-sudo git clone https://github.com/SefionITServices/clearPanel.git hpanel
-cd hpanel
+sudo git clone https://github.com/SefionITServices/clearPanel.git clearpanel
+cd clearpanel
 
 # Install dependencies
 sudo npm install
@@ -164,13 +165,13 @@ MAX_FILE_SIZE=104857600
 Use the provided service file:
 
 ```bash
-sudo cp hpanel.service /etc/systemd/system/
+sudo cp clearpanel.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable hpanel
-sudo systemctl start hpanel
+sudo systemctl enable clearpanel
+sudo systemctl start clearpanel
 
 # Check status
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 ```
 
 ### 5. Configure Firewall
@@ -194,7 +195,7 @@ sudo firewall-cmd --reload
 ### 6. Install DNS Server (Optional but Recommended)
 
 ```bash
-# Via hPanel UI (after login)
+# Via clearPanel UI (after login)
 # Go to Settings → DNS Server → Install BIND9
 
 # Or via API
@@ -221,7 +222,7 @@ https://panel.yourdomain.com
 
 **Via Cloudflare Tunnel:**
 ```
-https://hpanel.your-tunnel.com
+https://clearpanel.your-tunnel.com
 ```
 
 ### Creating Your First Domain
@@ -231,7 +232,7 @@ https://hpanel.your-tunnel.com
 3. Enter domain name (e.g., `mywebsite.com`)
 4. Click **Create Domain**
 
-hPanel automatically:
+clearPanel automatically:
 - ✅ Creates `/home/sefion/Domains/mywebsite.com/` folder
 - ✅ Generates nginx virtual host configuration
 - ✅ Creates BIND9 DNS zone with ns1/ns2 records
@@ -259,7 +260,7 @@ hPanel automatically:
 4. Download backups as ZIP
 
 # Check status
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 ```
 
 ### 5. Configure Firewall
@@ -532,7 +533,7 @@ nslookup example.com
 **Check logs:**
 ```bash
 # Backend logs
-sudo journalctl -u hpanel -f
+sudo journalctl -u clearpanel -f
 
 # Or if running in terminal
 tail -f server.log
@@ -553,27 +554,27 @@ cat backend/dns.json
 ### Service Management
 
 ```bash
-# Start hPanel
-sudo systemctl start hpanel
+# Start clearPanel
+sudo systemctl start clearpanel
 
-# Stop hPanel
-sudo systemctl stop hpanel
+# Stop clearPanel
+sudo systemctl stop clearpanel
 
-# Restart hPanel
-sudo systemctl restart hpanel
+# Restart clearPanel
+sudo systemctl restart clearpanel
 
 # View logs
-sudo journalctl -u hpanel -f
+sudo journalctl -u clearpanel -f
 
 # Check status
-sudo systemctl status hpanel
+sudo systemctl status clearpanel
 ```
 
 ### Permission Errors
 
 ```bash
 # Ensure correct ownership
-sudo chown -R hpanel:hpanel /opt/hpanel
+sudo chown -R clearpanel:clearpanel /opt/clearpanel
 
 # Check domain folder permissions
 ls -la /home/sefion/Domains/
@@ -654,8 +655,8 @@ MIT License - Free to use and modify.
 
 - **Documentation:** See `docs/` folder
 - **Issues:** GitHub Issues
-- **Logs:** `sudo journalctl -u hpanel -f`
+- **Logs:** `sudo journalctl -u clearpanel -f`
 
 ---
 
-**hPanel** - Making VPS hosting automation accessible to everyone.
+**clearPanel** - Making VPS hosting automation accessible to everyone.

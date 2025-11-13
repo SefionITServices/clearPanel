@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -52,7 +52,7 @@ const path = __importStar(require("path"));
 const crypto_1 = require("crypto");
 const os = __importStar(require("os"));
 const DOMAINS_FILE = path.join(process.cwd(), 'domains.json');
-const DOMAINS_ROOT = process.env.DOMAINS_ROOT || path.join(os.homedir(), 'hpanel-domains');
+const DOMAINS_ROOT = process.env.DOMAINS_ROOT || path.join(os.homedir(), 'clearPanel-domains');
 let DomainsService = class DomainsService {
     constructor(dnsService, webServerService, dnsServerService) {
         this.dnsService = dnsService;

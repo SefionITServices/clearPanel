@@ -19,7 +19,8 @@ echo "cloudflared version: $(cloudflared --version | head -n1)"
 
 echo "\nNext steps:"
 echo "1) Run: cloudflared tunnel login   # Authorize this machine in your browser"
-echo "2) Run: cloudflared tunnel create hpanel   # Create a named tunnel"
+echo "2) Run: cloudflared tunnel create clearPanel   # Create a named tunnel"
 echo "3) Copy cloudflared/config.yml.example to ~/.cloudflared/config.yml and edit YOUR_TUNNEL_ID and hostname"
-echo "4) Route DNS (if your domain is on Cloudflare): cloudflared tunnel route dns hpanel panel.example.com"
-echo "5) Start: cloudflared tunnel run hpanel   or: sudo cloudflared service install"
+echo "4) Route DNS (if your domain is on Cloudflare): cloudflared tunnel route dns clearPanel panel.example.com"
+echo "5) Start: cloudflared tunnel run clearPanel   or: sudo cloudflared service install"
+
