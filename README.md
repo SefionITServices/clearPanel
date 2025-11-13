@@ -203,6 +203,15 @@ sudo certbot --nginx -d your-domain.com
 
 ## Usage
 
+## Connectivity modes (Cloudflare Tunnel vs Direct IP)
+
+If your ISP blocks port forwarding (CGNAT) or you're on a home/office network, you can expose hPanel using Cloudflare Tunnel without opening ports. Otherwise, you can host it directly via your public IP with Nginx.
+
+- Direct (Public IP): open port 3334 or proxy via Nginx on 80/443; use A records at your registrar. Best for VPS.
+- Cloudflare Tunnel: install cloudflared and map a hostname to http://localhost:3334; no port-forwarding needed.
+
+See docs/CONNECTIVITY.md for step-by-step instructions and examples.
+
 ### File Manager Operations
 
 - **Navigate**: Click on folders to open them, use breadcrumbs to go back

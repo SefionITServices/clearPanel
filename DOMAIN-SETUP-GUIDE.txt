@@ -1,0 +1,243 @@
+═══════════════════════════════════════════════════════════════════
+                  DOMAIN SETUP GUIDE - hPanel
+═══════════════════════════════════════════════════════════════════
+
+This guide explains how to add a domain and make it accessible on the internet.
+
+═══════════════════════════════════════════════════════════════════
+                    OPTION 1: Using Cloudflare DNS
+                    (Recommended - Easy & Free)
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: Add Domain to hPanel
+────────────────────────────────────────────────────────────────────
+1. Log in to hPanel: https://hpanel.sefion.cloud
+2. Go to "Domains" module
+3. Click "Add Domain"
+4. Enter your domain name (e.g., "mydomain.com")
+5. Click "Create"
+
+This creates:
+   • Folder: /home/sefion/Domains/mydomain.com/
+   • DNS Zone with default records in hPanel
+
+STEP 2: Point Domain to Cloudflare Nameservers
+────────────────────────────────────────────────────────────────────
+Go to your domain registrar (GoDaddy, Namecheap, etc.) and change 
+nameservers to Cloudflare's:
+
+   ns1.cloudflare.com
+   ns2.cloudflare.com
+
+(You'll get specific nameservers when you add the domain to Cloudflare)
+
+STEP 3: Add Domain to Cloudflare
+────────────────────────────────────────────────────────────────────
+1. Login to Cloudflare: https://dash.cloudflare.com
+2. Click "Add a Site"
+3. Enter your domain name
+4. Choose "Free" plan
+5. Cloudflare will scan existing DNS records
+6. Click "Continue"
+7. Copy the nameservers shown and update them at your registrar
+8. Click "Done, check nameservers"
+
+STEP 4: Add DNS Records in Cloudflare
+────────────────────────────────────────────────────────────────────
+In Cloudflare Dashboard → DNS → Records, add:
+
+A Record:
+   Type: A
+   Name: @ (or your domain)
+   IPv4 address: 204.83.99.245
+   Proxy status: DNS only (grey cloud)
+   TTL: Auto
+
+CNAME Record (for www):
+   Type: CNAME
+   Name: www
+   Target: @ (or your domain)
+   Proxy status: DNS only (grey cloud)
+   TTL: Auto
+
+STEP 5: Install & Configure Web Server
+────────────────────────────────────────────────────────────────────
+On your server (where hPanel is running), install Nginx or Apache.
+
+For Nginx:
+   sudo apt update
+   sudo apt install nginx -y
+
+Create config file: /etc/nginx/sites-available/mydomain.com
+────────────────────────────────────────────────────────────────────
+server {
+    listen 80;
+    server_name mydomain.com www.mydomain.com;
+    
+    root /home/sefion/Domains/mydomain.com;
+    index index.html index.htm index.php;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    
+    # PHP support (optional)
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+    }
+}
+────────────────────────────────────────────────────────────────────
+
+Enable the site:
+   sudo ln -s /etc/nginx/sites-available/mydomain.com /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo systemctl reload nginx
+
+STEP 6: Add Website Files
+────────────────────────────────────────────────────────────────────
+Upload your website to: /home/sefion/Domains/mydomain.com/
+
+Example test file:
+   echo "<h1>Welcome to mydomain.com</h1>" > /home/sefion/Domains/mydomain.com/index.html
+
+STEP 7: Test Your Domain
+────────────────────────────────────────────────────────────────────
+Visit: http://mydomain.com
+
+If it works, proceed to add SSL/HTTPS:
+   sudo apt install certbot python3-certbot-nginx
+   sudo certbot --nginx -d mydomain.com -d www.mydomain.com
+
+═══════════════════════════════════════════════════════════════════
+                    OPTION 2: Using Your Own DNS Server
+                    (Advanced - Full Control)
+═══════════════════════════════════════════════════════════════════
+
+If you want to run your own DNS server instead of Cloudflare:
+
+STEP 1: Install BIND9 DNS Server
+────────────────────────────────────────────────────────────────────
+   sudo apt update
+   sudo apt install bind9 bind9utils bind9-doc -y
+
+STEP 2: Configure DNS Zone
+────────────────────────────────────────────────────────────────────
+Create zone file: /etc/bind/zones/db.mydomain.com
+────────────────────────────────────────────────────────────────────
+$TTL    3600
+@       IN      SOA     ns1.mydomain.com. admin.mydomain.com. (
+                        2025111201 ; Serial
+                        3600       ; Refresh
+                        1800       ; Retry
+                        604800     ; Expire
+                        3600 )     ; Negative Cache TTL
+
+@       IN      NS      ns1.mydomain.com.
+@       IN      NS      ns2.mydomain.com.
+@       IN      A       204.83.99.245
+www     IN      A       204.83.99.245
+ns1     IN      A       204.83.99.245
+ns2     IN      A       204.83.99.245
+────────────────────────────────────────────────────────────────────
+
+Add to /etc/bind/named.conf.local:
+────────────────────────────────────────────────────────────────────
+zone "mydomain.com" {
+    type master;
+    file "/etc/bind/zones/db.mydomain.com";
+};
+────────────────────────────────────────────────────────────────────
+
+Restart BIND:
+   sudo systemctl restart bind9
+   sudo systemctl enable bind9
+
+STEP 3: Register Nameservers at Registrar
+────────────────────────────────────────────────────────────────────
+At your domain registrar, set nameservers to:
+   ns1.mydomain.com (pointing to 204.83.99.245)
+   ns2.mydomain.com (pointing to 204.83.99.245)
+
+Note: You need to register these as "glue records" first.
+
+STEP 4: Open DNS Port
+────────────────────────────────────────────────────────────────────
+   sudo ufw allow 53/tcp
+   sudo ufw allow 53/udp
+
+Configure router port forwarding:
+   External Port: 53 (TCP & UDP)
+   Internal IP: 172.16.1.211
+   Internal Port: 53 (TCP & UDP)
+
+Then follow Steps 5-6 from Option 1 for web server setup.
+
+═══════════════════════════════════════════════════════════════════
+                    QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════
+
+Your Server Info:
+   Public IP: 204.83.99.245
+   Local IP: 172.16.1.211
+   
+hPanel Access:
+   URL: https://hpanel.sefion.cloud
+   Username: admin
+   Password: admin123
+
+Domain Folders:
+   Main domain: /home/sefion/public_html/
+   Other domains: /home/sefion/Domains/[domain-name]/
+
+DNS Options:
+   ✅ Cloudflare DNS (Recommended) - Free, fast, DDoS protection
+   ⚠️  Own DNS Server - Full control, requires setup & maintenance
+
+Web Server:
+   Install: sudo apt install nginx
+   Config: /etc/nginx/sites-available/
+   Document root: /home/sefion/Domains/[domain]/
+
+SSL/HTTPS:
+   Install: sudo apt install certbot python3-certbot-nginx
+   Generate: sudo certbot --nginx -d yourdomain.com
+
+═══════════════════════════════════════════════════════════════════
+                    RECOMMENDED WORKFLOW
+═══════════════════════════════════════════════════════════════════
+
+For beginners or quick setup:
+1. Use Cloudflare DNS (Option 1)
+2. Point domain nameservers to Cloudflare
+3. Add DNS records in Cloudflare dashboard
+4. Install Nginx and create virtual host
+5. Upload website files via hPanel file manager
+6. Add SSL with certbot
+
+Benefits:
+✓ Easy to set up
+✓ Free SSL certificates
+✓ DDoS protection
+✓ Fast global DNS
+✓ DNS management in Cloudflare dashboard or hPanel
+
+═══════════════════════════════════════════════════════════════════
+
+Need help? Common issues:
+
+DNS not propagating?
+→ Wait 24-48 hours for full propagation
+→ Check with: https://dnschecker.org
+
+Domain not loading?
+→ Verify Nginx is running: sudo systemctl status nginx
+→ Check DNS records: dig yourdomain.com
+→ Check web server logs: sudo tail -f /var/log/nginx/error.log
+
+Port 80/443 blocked?
+→ Check firewall: sudo ufw status
+→ Allow ports: sudo ufw allow 80/tcp && sudo ufw allow 443/tcp
+→ Check router port forwarding
+
+═══════════════════════════════════════════════════════════════════

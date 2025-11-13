@@ -110,8 +110,11 @@ async function loadFiles(path) {
     updateBreadcrumb();
     
     try {
+        console.log('Loading files from path:', path);
         const response = await fetch(`/api/files/list?path=${encodeURIComponent(path)}`);
+        console.log('Response status:', response.status);
         const data = await response.json();
+        console.log('Response data:', data);
         
         if (data.success) {
             displayFiles(data.items);
@@ -119,6 +122,7 @@ async function loadFiles(path) {
             statusText.textContent = 'Ready';
         } else {
             fileList.innerHTML = `<div class="loading">Error: ${data.error}</div>`;
+            console.error('File list error:', data.error);
         }
     } catch (error) {
         fileList.innerHTML = `<div class="loading">Connection error</div>`;
@@ -291,13 +295,16 @@ async function createFolder() {
     }
     
     try {
+        console.log('Creating folder:', folderName, 'in path:', currentPath);
         const response = await fetch('/api/files/mkdir', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ path: currentPath, name: folderName })
         });
         
+        console.log('Create folder response status:', response.status);
         const data = await response.json();
+        console.log('Create folder response data:', data);
         
         if (data.success) {
             newFolderModal.style.display = 'none';
@@ -308,6 +315,7 @@ async function createFolder() {
             alert('Create folder failed: ' + data.error);
         }
     } catch (error) {
+        console.error('Create folder error:', error);
         alert('Error: ' + error.message);
     }
 }
