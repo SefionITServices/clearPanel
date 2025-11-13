@@ -16,6 +16,7 @@ const terminal_module_1 = require("./terminal/terminal.module");
 const domains_module_1 = require("./domains/domains.module");
 const dns_module_1 = require("./dns/dns.module");
 const webserver_module_1 = require("./webserver/webserver.module");
+const dns_server_module_1 = require("./dns-server/dns-server.module");
 let AppModule = class AppModule {
     configure(consumer) {
         // Apply SPA fallback for all non-API routes in production
@@ -35,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             domains_module_1.DomainsModule,
             dns_module_1.DnsModule,
             webserver_module_1.WebServerModule,
+            dns_server_module_1.DnsServerModule,
         ],
     })
 ], AppModule);

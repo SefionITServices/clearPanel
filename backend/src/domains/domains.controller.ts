@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Put, Delete, Param } from '@nestjs/common'
 import { DomainsService } from './domains.service';
 import { DnsService } from '../dns/dns.service';
 import { WebServerService } from '../webserver/webserver.service';
+import { DnsServerService } from '../dns-server/dns-server.service';
 import { ConfigService } from '@nestjs/config';
 
 @Controller('domains')
@@ -10,6 +11,7 @@ export class DomainsController {
     private readonly domainsService: DomainsService,
     private readonly dnsService: DnsService,
     private readonly webServerService: WebServerService,
+    private readonly dnsServerService: DnsServerService,
     private readonly configService: ConfigService
   ) {}
 
@@ -20,7 +22,8 @@ export class DomainsController {
     const zone = await this.dnsService.getZone(body.name);
     const serverIp = this.configService.get<string>('SERVER_IP') || '0.0.0.0';
     const dnsInstructions = this.webServerService.getDNSInstructions(body.name, serverIp);
-    return { domain, dnsZone: zone, dnsInstructions };
+    const nameserverInfo = await this.dnsServerService.getNameserverInstructions(body.name);
+    return { domain, dnsZone: zone, dnsInstructions, nameserverInfo };
   }
 
   @Get()

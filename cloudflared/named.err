@@ -61,3 +61,27 @@
 2025-11-13T00:42:29Z INF Registered tunnel connection connIndex=2 connection=b8845a72-64c5-4cd8-b961-838defa2706a event=0 ip=198.41.200.13 location=ord11 protocol=quic
 2025-11-13T00:42:33Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.7
 2025-11-13T00:42:33Z INF Registered tunnel connection connIndex=0 connection=e5d72051-3acc-46c4-912d-b8c89442c7f4 event=0 ip=198.41.192.7 location=yvr01 protocol=quic
+2025-11-13T02:50:29Z INF Initiating graceful shutdown due to signal terminated ...
+2025-11-13T02:50:29Z ERR failed to run the datagram handler error="context canceled" connIndex=2 event=0 ip=198.41.200.13
+2025-11-13T02:50:29Z ERR failed to run the datagram handler error="Application error 0x0 (remote)" connIndex=1 event=0 ip=198.41.200.53
+2025-11-13T02:50:29Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.13
+2025-11-13T02:50:29Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.53
+2025-11-13T02:50:29Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.13
+2025-11-13T02:50:29Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.53
+2025-11-13T02:50:29Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.13
+2025-11-13T02:50:29Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.53
+2025-11-13T02:50:29Z ERR Connection terminated connIndex=2
+2025-11-13T02:50:29Z ERR Connection terminated connIndex=1
+2025-11-13T02:50:29Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.7
+2025-11-13T02:50:29Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.7
+2025-11-13T02:50:29Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.7
+2025-11-13T02:50:29Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.7
+2025-11-13T02:50:29Z ERR Connection terminated connIndex=0
+2025-11-13T02:50:29Z ERR failed to run the datagram handler error="context canceled" connIndex=3 event=0 ip=198.41.192.107
+2025-11-13T02:50:29Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.107
+2025-11-13T02:50:29Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.107
+2025-11-13T02:50:29Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.107
+2025-11-13T02:50:29Z ERR Connection terminated connIndex=3
+2025-11-13T02:50:29Z ERR no more connections active and exiting
+2025-11-13T02:50:29Z INF Tunnel server stopped
+2025-11-13T02:50:29Z INF Metrics server stopped

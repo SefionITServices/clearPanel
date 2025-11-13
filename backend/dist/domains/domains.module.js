@@ -12,12 +12,13 @@ const domains_service_1 = require("./domains.service");
 const domains_controller_1 = require("./domains.controller");
 const dns_module_1 = require("../dns/dns.module");
 const webserver_module_1 = require("../webserver/webserver.module");
+const dns_server_module_1 = require("../dns-server/dns-server.module");
 let DomainsModule = class DomainsModule {
 };
 exports.DomainsModule = DomainsModule;
 exports.DomainsModule = DomainsModule = __decorate([
     (0, common_1.Module)({
-        imports: [dns_module_1.DnsModule, webserver_module_1.WebServerModule],
+        imports: [dns_module_1.DnsModule, webserver_module_1.WebServerModule, dns_server_module_1.DnsServerModule],
         providers: [domains_service_1.DomainsService],
         controllers: [domains_controller_1.DomainsController],
     })

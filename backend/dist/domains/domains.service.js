@@ -46,6 +46,7 @@ exports.DomainsService = void 0;
 const common_1 = require("@nestjs/common");
 const dns_service_1 = require("../dns/dns.service");
 const webserver_service_1 = require("../webserver/webserver.service");
+const dns_server_service_1 = require("../dns-server/dns-server.service");
 const fs = __importStar(require("fs/promises"));
 const path = __importStar(require("path"));
 const crypto_1 = require("crypto");
@@ -53,9 +54,10 @@ const os = __importStar(require("os"));
 const DOMAINS_FILE = path.join(process.cwd(), 'domains.json');
 const DOMAINS_ROOT = process.env.DOMAINS_ROOT || path.join(os.homedir(), 'hpanel-domains');
 let DomainsService = class DomainsService {
-    constructor(dnsService, webServerService) {
+    constructor(dnsService, webServerService, dnsServerService) {
         this.dnsService = dnsService;
         this.webServerService = webServerService;
+        this.dnsServerService = dnsServerService;
     }
     async readDomains() {
         try {
@@ -97,6 +99,18 @@ let DomainsService = class DomainsService {
             console.error('DNS zone creation failed:', e);
             // Continue even if DNS fails
         }
+        // Create BIND9 DNS zone (authoritative DNS server)
+        try {
+            const dnsServerStatus = await this.dnsServerService.getStatus();
+            if (dnsServerStatus.installed && dnsServerStatus.running) {
+                const zoneResult = await this.dnsServerService.createZone(name);
+                console.log(`DNS server zone: ${zoneResult.message}`);
+            }
+        }
+        catch (e) {
+            console.error('DNS server zone creation failed:', e);
+            // Continue even if DNS server fails
+        }
         // Auto-create nginx virtual host
         try {
             const vhostResult = await this.webServerService.createVirtualHost(name, domain.folderPath);
@@ -137,6 +151,18 @@ let DomainsService = class DomainsService {
             console.error('Failed to delete DNS zone:', e);
             // Continue even if DNS deletion fails
         }
+        // Remove DNS server zone
+        try {
+            const dnsServerStatus = await this.dnsServerService.getStatus();
+            if (dnsServerStatus.installed) {
+                const zoneResult = await this.dnsServerService.deleteZone(domain.name);
+                console.log(`DNS server zone removal: ${zoneResult.message}`);
+            }
+        }
+        catch (e) {
+            console.error('Failed to delete DNS server zone:', e);
+            // Continue even if DNS server deletion fails
+        }
         // Remove nginx virtual host
         try {
             const vhostResult = await this.webServerService.removeVirtualHost(domain.name);
@@ -156,6 +182,7 @@ exports.DomainsService = DomainsService;
 exports.DomainsService = DomainsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [dns_service_1.DnsService,
-        webserver_service_1.WebServerService])
+        webserver_service_1.WebServerService,
+        dns_server_service_1.DnsServerService])
 ], DomainsService);
 //# sourceMappingURL=domains.service.js.map

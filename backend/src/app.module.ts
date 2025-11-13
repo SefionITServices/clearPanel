@@ -8,6 +8,7 @@ import { TerminalModule } from './terminal/terminal.module';
 import { DomainsModule } from './domains/domains.module';
 import { DnsModule } from './dns/dns.module';
 import { WebServerModule } from './webserver/webserver.module';
+import { DnsServerModule } from './dns-server/dns-server.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WebServerModule } from './webserver/webserver.module';
     DomainsModule,
     DnsModule,
     WebServerModule,
+    DnsServerModule,
   ],
 })
 export class AppModule implements NestModule {

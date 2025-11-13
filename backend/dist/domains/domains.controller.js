@@ -17,12 +17,14 @@ const common_1 = require("@nestjs/common");
 const domains_service_1 = require("./domains.service");
 const dns_service_1 = require("../dns/dns.service");
 const webserver_service_1 = require("../webserver/webserver.service");
+const dns_server_service_1 = require("../dns-server/dns-server.service");
 const config_1 = require("@nestjs/config");
 let DomainsController = class DomainsController {
-    constructor(domainsService, dnsService, webServerService, configService) {
+    constructor(domainsService, dnsService, webServerService, dnsServerService, configService) {
         this.domainsService = domainsService;
         this.dnsService = dnsService;
         this.webServerService = webServerService;
+        this.dnsServerService = dnsServerService;
         this.configService = configService;
     }
     async addDomain(body) {
@@ -31,7 +33,8 @@ let DomainsController = class DomainsController {
         const zone = await this.dnsService.getZone(body.name);
         const serverIp = this.configService.get('SERVER_IP') || '0.0.0.0';
         const dnsInstructions = this.webServerService.getDNSInstructions(body.name, serverIp);
-        return { domain, dnsZone: zone, dnsInstructions };
+        const nameserverInfo = await this.dnsServerService.getNameserverInstructions(body.name);
+        return { domain, dnsZone: zone, dnsInstructions, nameserverInfo };
     }
     async listDomains() {
         return this.domainsService.listDomains();
@@ -98,6 +101,7 @@ exports.DomainsController = DomainsController = __decorate([
     __metadata("design:paramtypes", [domains_service_1.DomainsService,
         dns_service_1.DnsService,
         webserver_service_1.WebServerService,
+        dns_server_service_1.DnsServerService,
         config_1.ConfigService])
 ], DomainsController);
 //# sourceMappingURL=domains.controller.js.map

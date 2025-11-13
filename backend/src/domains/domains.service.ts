@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DnsService } from '../dns/dns.service';
 import { WebServerService } from '../webserver/webserver.service';
+import { DnsServerService } from '../dns-server/dns-server.service';
 import { Domain } from './domain.model';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -14,7 +15,8 @@ const DOMAINS_ROOT = process.env.DOMAINS_ROOT || path.join(os.homedir(), 'hpanel
 export class DomainsService {
   constructor(
     private readonly dnsService: DnsService,
-    private readonly webServerService: WebServerService
+    private readonly webServerService: WebServerService,
+    private readonly dnsServerService: DnsServerService
   ) {}
   private async readDomains(): Promise<Domain[]> {
     try {
@@ -60,6 +62,18 @@ export class DomainsService {
       // Continue even if DNS fails
     }
 
+    // Create BIND9 DNS zone (authoritative DNS server)
+    try {
+      const dnsServerStatus = await this.dnsServerService.getStatus();
+      if (dnsServerStatus.installed && dnsServerStatus.running) {
+        const zoneResult = await this.dnsServerService.createZone(name);
+        console.log(`DNS server zone: ${zoneResult.message}`);
+      }
+    } catch (e) {
+      console.error('DNS server zone creation failed:', e);
+      // Continue even if DNS server fails
+    }
+
     // Auto-create nginx virtual host
     try {
       const vhostResult = await this.webServerService.createVirtualHost(name, domain.folderPath);
@@ -101,6 +115,18 @@ export class DomainsService {
     } catch (e) {
       console.error('Failed to delete DNS zone:', e);
       // Continue even if DNS deletion fails
+    }
+
+    // Remove DNS server zone
+    try {
+      const dnsServerStatus = await this.dnsServerService.getStatus();
+      if (dnsServerStatus.installed) {
+        const zoneResult = await this.dnsServerService.deleteZone(domain.name);
+        console.log(`DNS server zone removal: ${zoneResult.message}`);
+      }
+    } catch (e) {
+      console.error('Failed to delete DNS server zone:', e);
+      // Continue even if DNS server deletion fails
     }
 
     // Remove nginx virtual host

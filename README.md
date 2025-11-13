@@ -1,8 +1,33 @@
-# hPanel - File Manager
+# hPanel - Web Hosting Control Panel
 
-A web-based control panel for AlmaLinux VPS with a powerful file manager interface. This is the first module of a complete cPanel-like control panel system.
+A modern, plug-and-play web hosting control panel for any VPS. Features automatic domain provisioning, DNS server integration, web server automation, and file management.
 
-## Features
+## 🚀 Key Features
+
+✅ **Domain Management**
+- One-click domain creation with automatic folder structure
+- Auto-configure nginx virtual hosts
+- Built-in DNS zone management
+- Domain deletion with cleanup
+
+✅ **Own DNS Server (BIND9)**
+- Transform your VPS into an authoritative nameserver
+- Automatic zone file creation for each domain
+- Custom nameservers (ns1.yourdomain.com, ns2.yourdomain.com)
+- Full control over DNS records
+- See [DNS Server Guide](docs/DNS-SERVER.md)
+
+✅ **Web Server Automation**
+- Automatic nginx virtual host configuration
+- PHP-FPM integration ready
+- SSL certificate support
+- Per-domain access/error logs
+ - See [Web Server Setup (Nginx vs Apache)](docs/WEB-SERVER.md)
+
+✅ **DNS Management**
+- Edit A, AAAA, CNAME, MX, TXT records
+- Real-time zone updates
+- Import existing DNS from registrar
 
 ✅ **File Manager**
 - Browse directories with breadcrumb navigation
@@ -19,105 +44,219 @@ A web-based control panel for AlmaLinux VPS with a powerful file manager interfa
 - Configurable root directory access
 - Secure file operations
 
-## Installation on AlmaLinux VPS
+✅ **Dual Connectivity Modes**
+- **Direct IP Access:** Perfect for VPS with public IP
+- **Cloudflare Tunnel:** Access from anywhere, even behind CGNAT/NAT
+- See [Connectivity Guide](docs/CONNECTIVITY.md)
 
-### 1. Install Node.js (if not already installed)
+## Quick Start
+
+### Automated Installation
 
 ```bash
-# Install Node.js 18.x LTS
+# Clone repository
+git clone https://github.com/SefionITServices/clearPanel.git
+cd clearPanel
+
+# Run installation script
+sudo chmod +x install.sh
+sudo ./install.sh
+```
+
+The installer will:
+- Install Node.js dependencies
+- Set up environment configuration
+- Create systemd service
+- Configure nginx (optional)
+- Set up Cloudflare Tunnel (optional)
+
+See detailed guides:
+- [Full Installation Guide](docs/INSTALLATION.md)
+- [Connectivity Options](docs/CONNECTIVITY.md)
+- [DNS Server Setup](docs/DNS-SERVER.md)
+ - [Web Server Setup (Nginx vs Apache)](docs/WEB-SERVER.md)
+
+## Manual Installation
+
+### 1. Prerequisites
+
+**Ubuntu/Debian:**
+```bash
+# Install Node.js 18.x
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Install nginx
+sudo apt-get install -y nginx
+
+# Install BIND9 (for DNS server)
+sudo apt-get install -y bind9 bind9utils
+```
+
+**CentOS/AlmaLinux/RHEL:**
+```bash
+# Install Node.js 18.x
 curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo dnf install -y nodejs
 
-# Verify installation
-node --version
-npm --version
+# Install nginx
+sudo dnf install -y nginx
+
+# Install BIND (for DNS server)
+sudo dnf install -y bind bind-utils
 ```
 
-### 2. Install the Application
+### 2. Install Application
 
 ```bash
-# Clone or upload the project to your VPS
+# Clone or download
 cd /opt
-sudo mkdir hpanel
+sudo git clone https://github.com/SefionITServices/clearPanel.git hpanel
 cd hpanel
 
-# If uploading files, use scp or sftp:
-# scp -r ./project/* user@your-vps-ip:/opt/hpanel/
-
-# Set up the application
+# Install dependencies
 sudo npm install
 
-# Create environment configuration
+# Build backend
+cd backend
+npm install
+npm run build
+cd ..
+```
+
+### 3. Configure Environment
+
+```bash
+cd backend
 sudo cp .env.example .env
 sudo nano .env
 ```
 
-### 3. Configure Environment Variables
-
 Edit `.env` file:
 
 ```env
-PORT=3000
+PORT=3334
 SESSION_SECRET=your-random-secure-string-here
 
 # Change these credentials!
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=StrongPassword123!
 
-# File Manager Settings
-ROOT_PATH=/home
+# File Manager & Domain Settings
+ROOT_PATH=/home/sefion
+DOMAINS_ROOT=/home/sefion/Domains
+SERVER_IP=your.vps.ip.address
+
+# Upload limits
 ALLOWED_EXTENSIONS=*
 MAX_FILE_SIZE=104857600
 ```
 
-**Important Security Notes:**
-- Change `ADMIN_USERNAME` and `ADMIN_PASSWORD` immediately
-- Use a strong, random `SESSION_SECRET` (generate with: `openssl rand -hex 32`)
-- Set `ROOT_PATH` to limit file access (e.g., `/home` or `/var/www`)
+**Important:**
+- Change `ADMIN_USERNAME` and `ADMIN_PASSWORD`
+- Generate `SESSION_SECRET`: `openssl rand -hex 32`
+- Set `SERVER_IP` to your VPS public IP
+- Set `ROOT_PATH` to user home directory
+- Set `DOMAINS_ROOT` for domain folder creation
 
-### 4. Set Up as a System Service
+### 4. Set Up Systemd Service
 
-Create a systemd service file:
-
-```bash
-sudo nano /etc/systemd/system/hpanel.service
-```
-
-Paste this configuration:
-
-```ini
-[Unit]
-Description=VPS Control Panel
-After=network.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/vps-control-panel
-ExecStart=/usr/bin/node server.js
-Restart=on-failure
-RestartSec=10
-StandardOutput=journal
-StandardError=journal
-SyslogIdentifier=vps-panel
-
-Environment=NODE_ENV=production
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable and start the service:
+Use the provided service file:
 
 ```bash
-# Reload systemd
+sudo cp hpanel.service /etc/systemd/system/
 sudo systemctl daemon-reload
-
-# Enable service to start on boot
 sudo systemctl enable hpanel
-
-# Start the service
 sudo systemctl start hpanel
+
+# Check status
+sudo systemctl status hpanel
+```
+
+### 5. Configure Firewall
+
+```bash
+# Allow HTTP/HTTPS
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Allow DNS (for DNS server feature)
+sudo ufw allow 53/tcp
+sudo ufw allow 53/udp
+
+# Or for firewalld (CentOS/AlmaLinux)
+sudo firewall-cmd --add-service=http --permanent
+sudo firewall-cmd --add-service=https --permanent
+sudo firewall-cmd --add-service=dns --permanent
+sudo firewall-cmd --reload
+```
+
+### 6. Install DNS Server (Optional but Recommended)
+
+```bash
+# Via hPanel UI (after login)
+# Go to Settings → DNS Server → Install BIND9
+
+# Or via API
+curl -X POST http://localhost:3334/api/dns-server/install
+
+# Or manually
+sudo apt-get install -y bind9 bind9utils  # Ubuntu/Debian
+sudo dnf install -y bind bind-utils        # CentOS/AlmaLinux
+```
+
+## Usage
+
+### Access the Panel
+
+**Direct IP Access:**
+```
+http://your-vps-ip:3334
+```
+
+**Via Nginx Reverse Proxy:**
+```
+https://panel.yourdomain.com
+```
+
+**Via Cloudflare Tunnel:**
+```
+https://hpanel.your-tunnel.com
+```
+
+### Creating Your First Domain
+
+1. Login with admin credentials
+2. Navigate to **Domains** → **Add Domain**
+3. Enter domain name (e.g., `mywebsite.com`)
+4. Click **Create Domain**
+
+hPanel automatically:
+- ✅ Creates `/home/sefion/Domains/mywebsite.com/` folder
+- ✅ Generates nginx virtual host configuration
+- ✅ Creates BIND9 DNS zone with ns1/ns2 records
+- ✅ Provides nameserver setup instructions
+
+5. Follow the nameserver instructions to point your domain:
+   - Create glue records at registrar: `ns1.mywebsite.com` → your VPS IP
+   - Set nameservers to `ns1.mywebsite.com` and `ns2.mywebsite.com`
+   - Wait 24-48 hours for propagation
+
+### Managing DNS Records
+
+1. Go to **DNS** → Select your domain
+2. Add/Edit records:
+   - **A Record:** Point domain to IP address
+   - **CNAME:** Create subdomain alias
+   - **MX:** Configure email servers
+   - **TXT:** Add SPF, DKIM, verification records
+
+### File Management
+
+1. Navigate to **Files**
+2. Browse domain folders under `/Domains/`
+3. Upload website files, edit configurations
+4. Download backups as ZIP
 
 # Check status
 sudo systemctl status hpanel
@@ -141,98 +280,286 @@ Open your browser and navigate to:
 http://your-vps-ip:3000
 ```
 
-Login with your configured credentials.
+## API Documentation
 
-## Optional: Set Up with Nginx Reverse Proxy
-
-For production use, it's recommended to use Nginx as a reverse proxy with SSL:
-
-### Install Nginx
-
+### Authentication
 ```bash
-sudo dnf install -y nginx
-sudo systemctl enable nginx
-sudo systemctl start nginx
-```
+POST /api/auth/login
+Content-Type: application/json
 
-### Configure Nginx
-
-```bash
-sudo nano /etc/nginx/conf.d/vps-panel.conf
-```
-
-Add this configuration:
-
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
+{
+  "username": "admin",
+  "password": "your-password"
 }
 ```
 
-Restart Nginx:
+### Domains
 
+**List all domains:**
 ```bash
-sudo nginx -t
-sudo systemctl restart nginx
+GET /api/domains
 ```
 
-### Add SSL with Let's Encrypt
-
+**Create domain:**
 ```bash
-# Install certbot
-sudo dnf install -y certbot python3-certbot-nginx
+POST /api/domains
+Content-Type: application/json
 
-# Get SSL certificate
-sudo certbot --nginx -d your-domain.com
+{
+  "domain": "example.com"
+}
 
-# Auto-renewal is set up automatically
+# Response includes nameserver instructions
+{
+  "domain": {...},
+  "nameserverInfo": {
+    "ns1": "ns1.example.com",
+    "ns2": "ns2.example.com",
+    "ip": "204.83.99.245",
+    "instructions": "..."
+  }
+}
 ```
 
-## Usage
+**Delete domain:**
+```bash
+DELETE /api/domains/:domain
+```
 
-## Connectivity modes (Cloudflare Tunnel vs Direct IP)
+### DNS Records
 
-If your ISP blocks port forwarding (CGNAT) or you're on a home/office network, you can expose hPanel using Cloudflare Tunnel without opening ports. Otherwise, you can host it directly via your public IP with Nginx.
+**Get records for domain:**
+```bash
+GET /api/dns/:domain
+```
 
-- Direct (Public IP): open port 3334 or proxy via Nginx on 80/443; use A records at your registrar. Best for VPS.
-- Cloudflare Tunnel: install cloudflared and map a hostname to http://localhost:3334; no port-forwarding needed.
+**Add DNS record:**
+```bash
+POST /api/dns
+Content-Type: application/json
 
-See docs/CONNECTIVITY.md for step-by-step instructions and examples.
+{
+  "domain": "example.com",
+  "type": "A",
+  "name": "@",
+  "value": "204.83.99.245",
+  "ttl": 3600
+}
+```
 
-### File Manager Operations
+**Delete DNS record:**
+```bash
+DELETE /api/dns
+Content-Type: application/json
 
-- **Navigate**: Click on folders to open them, use breadcrumbs to go back
-- **Upload**: Click "Upload" button, select file(s), and confirm
-- **New Folder**: Click "New Folder", enter name
-- **Select**: Click on any file/folder to select it
-- **Delete**: Select item, click "Delete" (confirmation required)
-- **Rename**: Select item, click "Rename", enter new name
-- **Download**: Select file, click "Download"
-- **Edit**: Double-click text files to open in built-in editor
+{
+  "domain": "example.com",
+  "recordId": "record-id-here"
+}
+```
+
+### DNS Server
+
+**Get status:**
+```bash
+GET /api/dns-server/status
+
+# Response
+{
+  "installed": true,
+  "running": true,
+  "version": "BIND 9.18.12",
+  "zonesPath": "/etc/bind/zones",
+  "namedConfPath": "/etc/bind/named.conf.local"
+}
+```
+
+**Install BIND9:**
+```bash
+POST /api/dns-server/install
+```
+
+**Reload DNS server:**
+```bash
+POST /api/dns-server/reload
+```
+
+**Get nameserver instructions:**
+```bash
+GET /api/dns-server/nameserver-instructions/:domain
+```
+
+### File Manager
+
+**List directory:**
+```bash
+POST /api/files/list
+Content-Type: application/json
+
+{
+  "path": "/home/sefion"
+}
+```
+
+**Upload file:**
+```bash
+POST /api/files/upload
+Content-Type: multipart/form-data
+
+# Form data with 'file' field
+```
+
+**Download file:**
+```bash
+POST /api/files/download
+Content-Type: application/json
+
+{
+  "path": "/home/sefion/file.txt"
+}
+```
+
+## Architecture
+
+### Backend (NestJS)
+```
+backend/src/
+├── auth/                 # Authentication module
+├── domains/              # Domain management
+│   ├── domains.service.ts    # Domain CRUD, integrations
+│   └── domains.controller.ts # REST endpoints
+├── dns/                  # DNS record tracking
+│   ├── dns.service.ts        # Zone data (dns.json)
+│   └── dns.controller.ts
+├── dns-server/           # BIND9 DNS server
+│   ├── dns-server.service.ts    # Zone files, BIND control
+│   └── dns-server.controller.ts
+├── webserver/            # Nginx automation
+│   └── webserver.service.ts  # Vhost creation/deletion
+└── files/                # File manager
+    ├── files.service.ts
+    └── files.controller.ts
+```
+
+### Frontend (React + MUI)
+```
+frontend/src/
+├── pages/
+│   ├── DomainsListView.tsx   # Domain management UI
+│   ├── DomainCreate.tsx      # Add domain form
+│   ├── DnsEditor.tsx         # DNS record editor
+│   └── FileManager.tsx       # File operations
+├── components/
+│   ├── Sidebar.tsx           # Navigation
+│   └── ...
+└── App.tsx                   # Router, auth
+```
+
+### Data Flow: Creating a Domain
+
+1. **User submits domain** via frontend form
+2. **DomainsController** receives POST request
+3. **DomainsService** orchestrates:
+   - Creates folder: `/home/sefion/Domains/example.com/`
+   - Calls **WebServerService**: generates nginx vhost
+   - Calls **DnsService**: adds to dns.json for tracking
+   - Calls **DnsServerService**: creates BIND9 zone file
+4. **DnsServerService**:
+   - Generates zone file with SOA, NS, A records
+   - Writes to `/etc/bind/zones/db.example.com`
+   - Updates `/etc/bind/named.conf.local`
+   - Reloads BIND9: `systemctl reload bind9`
+5. **Response** includes nameserver setup instructions
+6. **Frontend** displays success + nameserver guide
+
+### Integration Points
+
+- **Domains ↔ DNS Server:** Auto-create zones on domain add
+- **Domains ↔ Webserver:** Auto-configure nginx vhosts
+- **Domains ↔ DNS:** Track zones in dns.json
+- **File Manager:** Operates on domain folders in `DOMAINS_ROOT`
+
+## Connectivity Modes
+
+### Direct IP (VPS Deployment)
+- Open ports 80, 443, 53 on firewall
+- Configure nginx reverse proxy
+- Point A records to VPS IP
+- Best for: Cloud VPS with public IP
+
+### Cloudflare Tunnel (CGNAT/Home)
+- No port forwarding required
+- Works behind NAT/CGNAT
+- Free tier available
+- Best for: Home servers, restrictive networks
+
+See [CONNECTIVITY.md](docs/CONNECTIVITY.md) for detailed setup.
+
+## Troubleshooting
+
+### DNS Server Issues
+
+**BIND not running:**
+```bash
+# Check status
+sudo systemctl status bind9  # or named
+
+# View logs
+sudo journalctl -u bind9 -n 50
+
+# Test zone syntax
+sudo named-checkzone example.com /etc/bind/zones/db.example.com
+
+# Test BIND config
+sudo named-checkconf
+```
+
+**Zone not resolving:**
+```bash
+# Test locally
+dig @localhost example.com
+
+# Test from VPS IP
+dig @204.83.99.245 example.com
+
+# Check public DNS (after propagation)
+dig example.com
+nslookup example.com
+```
+
+### Domain Creation Failures
+
+**Check logs:**
+```bash
+# Backend logs
+sudo journalctl -u hpanel -f
+
+# Or if running in terminal
+tail -f server.log
+```
+
+**Verify integrations:**
+```bash
+# Check nginx vhost created
+ls -la /etc/nginx/sites-available/
+
+# Check zone file created
+ls -la /etc/bind/zones/
+
+# Check dns.json updated
+cat backend/dns.json
+```
 
 ### Service Management
 
 ```bash
-# Start service
+# Start hPanel
 sudo systemctl start hpanel
 
-# Stop service
+# Stop hPanel
 sudo systemctl stop hpanel
 
-# Restart service
+# Restart hPanel
 sudo systemctl restart hpanel
 
 # View logs
@@ -242,117 +569,93 @@ sudo journalctl -u hpanel -f
 sudo systemctl status hpanel
 ```
 
-## Troubleshooting
-
-### Service won't start
-
-```bash
-# Check logs
-sudo journalctl -u hpanel -n 50
-
-# Check if port is already in use
-sudo netstat -tulpn | grep 3000
-
-# Test manually
-cd /opt/hpanel
-node server.js
-```
-
-### Permission errors
+### Permission Errors
 
 ```bash
 # Ensure correct ownership
-sudo chown -R root:root /opt/hpanel
+sudo chown -R hpanel:hpanel /opt/hpanel
 
-# Check file permissions
-ls -la /opt/hpanel
+# Check domain folder permissions
+ls -la /home/sefion/Domains/
+
+# Fix if needed
+sudo chown -R sefion:sefion /home/sefion/Domains/
 ```
 
-### Can't access from browser
+## Security Best Practices
 
-```bash
-# Check firewall
-sudo firewall-cmd --list-all
+1. ✅ **Change default credentials** immediately
+2. ✅ **Use HTTPS** with Let's Encrypt SSL
+3. ✅ **Strong SESSION_SECRET** (32+ chars)
+4. ✅ **Firewall rules** - only open needed ports
+5. ✅ **Regular updates** - `npm update`, system patches
+6. ✅ **Limit ROOT_PATH** to specific directories
+7. ✅ **Rate limiting** on DNS queries (BIND built-in)
+8. ✅ **Backup strategy** for dns.json and configs
+9. ✅ **Monitor logs** for suspicious activity
+10. ✅ **DNSSEC** (optional) for enhanced DNS security
 
-# Check if service is running
-sudo systemctl status hpanel
+## Production Checklist
 
-# Check if port is listening
-sudo netstat -tulpn | grep 3000
-```
+Before going live:
 
-## Security Recommendations
+- [ ] Change admin password
+- [ ] Set strong SESSION_SECRET
+- [ ] Install and configure SSL certificate
+- [ ] Set up firewall rules (ufw/firewalld)
+- [ ] Configure nginx reverse proxy
+- [ ] Install and configure BIND9
+- [ ] Set up automated backups
+- [ ] Test domain creation workflow
+- [ ] Verify DNS resolution
+- [ ] Set up monitoring/alerting
+- [ ] Document custom configurations
 
-1. **Change default credentials** immediately after first login
-2. **Use HTTPS** with Nginx reverse proxy and SSL certificate
-3. **Limit ROOT_PATH** to only necessary directories
-4. **Set strong SESSION_SECRET** (32+ random characters)
-5. **Regular updates**: Keep Node.js and dependencies updated
-6. **Firewall**: Only open necessary ports
-7. **Consider fail2ban** for brute-force protection
-8. **Regular backups** of important data
+## Contributing
 
-## Future Modules
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-This file manager is the first module. Planned additions:
+## Roadmap
 
-- 📊 System monitoring (CPU, RAM, Disk usage)
-- 🗄️ Database management (MySQL, PostgreSQL)
-- 🌐 Web server management (Nginx, Apache)
-- 📧 Email management
-- 🔐 User management
-- 📦 Package manager
-- 🔄 Backup & restore
-- 📈 Analytics dashboard
+### In Progress
+- ✅ Domain management with automation
+- ✅ DNS server (BIND9) integration
+- ✅ Webserver automation (nginx)
+- ✅ File manager with editor
 
-## Development
+### Planned
+- 🔲 Frontend UI for DNS server status
+- 🔲 Email server management (Postfix/Dovecot)
+- 🔲 Database management (MySQL/PostgreSQL)
+- 🔲 SSL certificate automation (Let's Encrypt)
+- 🔲 System monitoring dashboard
+- 🔲 User management & permissions
+- 🔲 Backup & restore system
+- 🔲 FTP/SFTP server integration
+- 🔲 DNSSEC support
+- 🔲 Secondary DNS server setup
 
-### Local Development
+## Resources
 
-```bash
-# Install dependencies
-npm install
-
-# Create .env file
-cp .env.example .env
-
-# Run in development mode with auto-reload
-npm run dev
-
-# Or run normally
-npm start
-```
-
-### Project Structure
-
-```
-hpanel/
-├── public/              # Frontend files
-│   ├── index.html      # Main HTML
-│   ├── css/
-│   │   └── style.css   # Styles
-│   └── js/
-│       └── app.js      # Frontend JavaScript
-├── routes/             # API routes
-│   ├── auth.js         # Authentication
-│   └── files.js        # File operations
-├── server.js           # Main server
-├── package.json        # Dependencies
-├── .env               # Configuration (create from .env.example)
-└── README.md          # This file
-```
+- [BIND9 Documentation](https://bind9.readthedocs.io/)
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Nginx Documentation](https://nginx.org/en/docs/)
+- [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
 
 ## License
 
-MIT License - Feel free to modify and use for your projects.
+MIT License - Free to use and modify.
 
 ## Support
 
-For issues or questions, please check:
-- Server logs: `sudo journalctl -u hpanel -f`
-- Application logs in the browser console
-- Ensure all dependencies are installed: `npm install`
+- **Documentation:** See `docs/` folder
+- **Issues:** GitHub Issues
+- **Logs:** `sudo journalctl -u hpanel -f`
 
 ---
 
-**Note**: This is a development version. For production use, consider additional security measures and regular updates.
+**hPanel** - Making VPS hosting automation accessible to everyone.
